@@ -1,3 +1,10 @@
 {
-    "usuarios": []
+    "usuarios": [
+        {
+            "id": "1", 
+            "name": "Camilo Perez", 
+            "correo": "camilo09936@test.com", 
+            "contrasena": "123"
+        }
+    ]
 }
