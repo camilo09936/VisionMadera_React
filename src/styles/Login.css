@@ -5,7 +5,7 @@ body{
 }
 
 .pantalla-login{
-    background: url('../assets/FondoLogin.jpg') no-repeat center center fixed;
+    background: url('../assets/ResourcesLogin/FondoLogin.jpg') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     display: flex;
@@ -137,11 +137,6 @@ body{
     opacity: 0.9;
 }
 
-.registro a{
-    color: white;
-    text-decoration: none;
-}
-
 .registro a:hover{
     text-decoration: underline;
 }
@@ -170,4 +165,11 @@ body{
     padding: 5px;
     border-radius: 4px;
     animation: fadeIn 0.3s ease-in;
+}
+
+.link-falso{
+    color: white;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-left: 5px;
 }

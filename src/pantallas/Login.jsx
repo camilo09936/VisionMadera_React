@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import '../styles/Login.css';
-import LogoVM from '../assets/LogoVisionMadera.png'
-import VetIcono from '../assets/MostrarContrasena.png'
-import OcultarIcono from '../assets/OcultarContrasena.png'
+import LogoVM from '../assets/ResourcesLogin/LogoVisionMadera.png'
+import VetIcono from '../assets/ResourcesLogin/MostrarContrasena.png'
+import OcultarIcono from '../assets/ResourcesLogin/OcultarContrasena.png'
 
-const Login= () => { //Capturar Datos
+const Login= ({alCambiarRegistro}) => { //Capturar Datos
     const [usuarios, setUsuarios] = useState([]);
     const [correo, setCorreo] = useState("");
     const [contrasena, setContrasena] = useState("");
@@ -105,7 +105,14 @@ const Login= () => { //Capturar Datos
                         </div>
                         <button type="submit">Ingresar</button>
                         <div className="registro">
-                            <p>¿No tienes cuenta? <a href="#">Regístrate</a></p>
+                            <p>¿No tienes cuenta? 
+                                <span 
+                                className="link-falso"
+                                onClick={alCambiarRegistro}
+                                >
+                                    Regístrate
+                                    </span>
+                                </p>
                         </div>
                     </form>
                 </div>
