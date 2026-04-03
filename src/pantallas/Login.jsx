@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import '../styles/Login.css';
 import LogoVM from '../assets/ResourcesLogin/LogoVisionMadera.png'
-import VetIcono from '../assets/ResourcesLogin/MostrarContrasena.png'
+import VerIcono from '../assets/ResourcesLogin/MostrarContrasena.png'
 import OcultarIcono from '../assets/ResourcesLogin/OcultarContrasena.png'
 
 const Login= ({alCambiarRegistro}) => { //Capturar Datos
@@ -86,7 +86,7 @@ const Login= ({alCambiarRegistro}) => { //Capturar Datos
                         />
                         <label>Ingrese su contraseña</label>
                         <img
-                        src={verContrasena ? OcultarIcono : VetIcono}
+                        src={verContrasena ? OcultarIcono : VerIcono}
                         alt="Ver/Ocultar"
                         className="icono-ojo"
                         onClick={()=> setVerContrasena(!verContrasena)}

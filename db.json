@@ -1,10 +1,30 @@
 {
-    "usuarios": [
-        {
-            "id": "1", 
-            "name": "Camilo Perez", 
-            "correo": "camilo09936@test.com", 
-            "contrasena": "123"
-        }
-    ]
+  "usuarios": [
+    {
+      "primerNombre": "Camilo",
+      "segundoNombre": "Andres",
+      "primerApellido": "Perez",
+      "segundoApellido": "Florez",
+      "documento": "1001015565",
+      "fechaNacimiento": "2002-07-30",
+      "telefono": "3016689694",
+      "direccion": "Calle 70 #55-122",
+      "correo": "camilo.perez10@correo.tdea.edu.co",
+      "contrasena": "1234",
+      "id": "OX4Y_YwDtO4"
+    },
+    {
+      "primerNombre": "Mario",
+      "segundoNombre": "Alberto",
+      "primerApellido": "Campo",
+      "segundoApellido": "Pineda",
+      "documento": "2471515",
+      "fechaNacimiento": "1987-06-24",
+      "telefono": "3015382456",
+      "direccion": "Itagui",
+      "correo": "MarioA@test.com",
+      "contrasena": "12345",
+      "id": "20Sc1lTe28c"
+    }
+  ]
 }
