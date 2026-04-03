@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import '../styles/Login.css';
 import LogoVM from '../assets/ResourcesLogin/LogoVisionMadera.png'
 import VerIcono from '../assets/ResourcesLogin/MostrarContrasena.png'
 import OcultarIcono from '../assets/ResourcesLogin/OcultarContrasena.png'
 
-const Login= ({alCambiarRegistro}) => { //Capturar Datos
+const Login= () => { //Capturar Datos
+    const navigate= useNavigate();
     const [usuarios, setUsuarios] = useState([]);
     const [correo, setCorreo] = useState("");
     const [contrasena, setContrasena] = useState("");
@@ -56,7 +58,8 @@ const Login= ({alCambiarRegistro}) => { //Capturar Datos
                 }else{
                     localStorage.removeItem("correoUsuario");
                 }
-                alert("¡Bienvenido " + (usuarioEncontrado.nombre || usuarioEncontrado.name)+ "!");
+                localStorage.setItem("nombreUsuario",`${usuarioEncontrado.primerNombre} ${usuarioEncontrado.primerApellido}`);
+                navigate("/home");
             }else{
                 setError("Correo o contraseña incorrectos");
             }
@@ -108,7 +111,7 @@ const Login= ({alCambiarRegistro}) => { //Capturar Datos
                             <p>¿No tienes cuenta? 
                                 <span 
                                 className="link-falso"
-                                onClick={alCambiarRegistro}
+                                onClick={()=>navigate("/registro")}
                                 >
                                     Regístrate
                                     </span>

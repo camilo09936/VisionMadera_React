@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import '../styles/Registro.css';
 import LogoVM from '../assets/ResourcesRegister/LogoVisionMadera.png';
 import VerIcono from '../assets/ResourcesLogin/MostrarContrasena.png';
 import OcultarIcono from '../assets/ResourcesLogin/OcultarContrasena.png';
 
-const Registro = ({alCambiarLogin}) => {
+const Registro = () => {
+    const navigate = useNavigate();
     const [datos, setDatos] = useState({
         primerNombre: "", segundoNombre: "",
         primerApellido: "", segundoApellido: "",
@@ -19,26 +21,23 @@ const Registro = ({alCambiarLogin}) => {
 
     const validarFormulario=()=>{
         const nuevosErrores={};
-        if(!datos.correo || !validarEmail(datos.correo)){
+        if(!datos.correo.trim()){
+            nuevosErrores.correo="Campo obligatorio";
+        }else if (!validarEmail(datos.correo)){
             nuevosErrores.correo= "El correo no es válido."
         }
-        if (!esMayorDeEdad(datos.fechaNacimiento)){
+        if (!datos.fechaNacimiento){
+            nuevosErrores.fechaNacimiento= "Campo obligatorio";
+        } else if (!esMayorDeEdad(datos.fechaNacimiento)){
             nuevosErrores.fechaNacimiento= "Debes ser mayor de 18 años.";
         }
-        if (!validarTelefono(datos.telefono)){
+        if (!datos.telefono.trim()){
+            nuevosErrores.telefono= "Campo obligatorio";
+        }else if (!validarTelefono(datos.telefono)){
             nuevosErrores.telefono= "El número de teléfono no es válido.";
         }
         if(datos.contrasena !== datos.confirmarContrasena){
             nuevosErrores.confirmarContrasena= "Las contraseñas no coinciden.";
-        }
-        if (!datos.correo.trim()){
-            nuevosErrores.correo= "Campo obligatorio";
-        }
-        if (!datos.telefono.trim()){
-            nuevosErrores.telefono= "Campo obligatorio";
-        }
-        if (!datos.fechaNacimiento){
-            nuevosErrores.fechaNacimiento= "Campo obligatorio";
         }
         if (!datos.primerNombre.trim()) {
             nuevosErrores.primerNombre = "Campo obligatorio";
@@ -96,6 +95,8 @@ const Registro = ({alCambiarLogin}) => {
             const usuarios= await respuesta.json();
             if (usuarios.length>0){
                 setErrores(prev=>({...prev,documento: "Documento ya registrado."}));
+            }else{
+                setErrores(prev=>({...prev,documento: ""}));
             }
         }catch(err){
             console.error("Error al conectar con la API")
@@ -109,7 +110,7 @@ const Registro = ({alCambiarLogin}) => {
                 "correo", "contrasena", "confirmarContrasena"
         ];
 
-        if (camposObligatorios.includes(name) && !value.trim()){
+        if (camposObligatorios.includes(name) && !value?.trim()){
             error="Campo obligatorio";
         }
         if(name==="correo" && value && !validarEmail(value)){
@@ -118,7 +119,7 @@ const Registro = ({alCambiarLogin}) => {
         if(name==="telefono" && value && !validarTelefono(value)){
             error="El teléfono no es válido."
         }
-        if(name==="fechaNacimiento" && !esMayorDeEdad(value)){
+        if(name==="fechaNacimiento" && value && !esMayorDeEdad(value)){
             error= "Debes ser mayor de 18 años";
         }
         if(name==="confirmarContrasena"){
@@ -140,6 +141,11 @@ const Registro = ({alCambiarLogin}) => {
         e.preventDefault();
         setError(""); //Limpiar Errores Previos
 
+        if (errores.documento){
+            setError("El documento ya está registrado.");
+            return;
+        }
+
         const esValido=validarFormulario();
         if(!esValido){
             setError("Por favor revisa los campos marcados.");
@@ -157,7 +163,7 @@ const Registro = ({alCambiarLogin}) => {
 
             if(response.ok){
                 alert("¡Te Registraste Exitosamente!");
-                alCambiarLogin();
+                navigate("/");
             }else{
                 setError("Hubo un problema al guardar los datos.");
             }
@@ -166,10 +172,6 @@ const Registro = ({alCambiarLogin}) => {
         }
     };
 
-    const formularioIncompleto=[
-        datos.primerNombre, datos.primerApellido, datos.documento,
-        datos.fechaNacimiento, datos.telefono, datos.direccion,
-        datos.correo, datos.contrasena, datos.confirmarContrasena].some(campo=>!campo.trim());
     return (
         <div className="pantalla-registro">
             <div className="tarjeta-registro">
@@ -388,7 +390,7 @@ const Registro = ({alCambiarLogin}) => {
                             Registrarse
                         </button>
                     </form>
-                    <span className="link-volver" onClick={alCambiarLogin}>
+                    <span className="link-volver" onClick={()=>navigate("/")}>
                         Volver al Login
                     </span>
                 </div>

@@ -26,5 +26,6 @@
       "contrasena": "12345",
       "id": "20Sc1lTe28c"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

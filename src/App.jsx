@@ -1,19 +1,17 @@
-import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pantallas/Login"
 import Registro from "./pantallas/Registro";
+import Home from "./pantallas/Home";
 
 function App() {
-  const [pantallaActual, setPantallaActual]= useState("login");
   return (
-    <div className="App">
-      {pantallaActual === 'login' && (
-        <Login alCambiarRegistro={()=> setPantallaActual('registro')}/>
-      )}
-      {pantallaActual === 'registro' && (
-        <Registro alCambiarLogin={()=> setPantallaActual('login')}/>
-      )}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login/>}/>
+        <Route path="/registro" element={<Registro/>}/>
+        <Route path="/home" element={<Home/>}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App
+export default App;
