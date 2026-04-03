@@ -56,7 +56,8 @@ const Login= () => { //Capturar Datos
                 }else{
                     localStorage.removeItem("correoUsuario");
                 }
-                alert("¡Bienvenido " + (usuarioEncontrado.nombre || usuarioEncontrado.name)+ "!");
+                localStorage.setItem("nombreUsuario", usuarioEncontrado.nombre || usuarioEncontrado.name);
+window.location.href = "/home";
             }else{
                 setError("Correo o contraseña incorrectos");
             }

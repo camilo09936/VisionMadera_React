@@ -5,6 +5,15 @@
             "name": "Camilo Perez", 
             "correo": "camilo09936@test.com", 
             "contrasena": "123"
+
+            
+        }
+
+       , {
+            "id": "2", 
+            "name": "Takagi-san", 
+            "correo": "Takagi@test.com", 
+            "contrasena": "1234"
         }
     ]
 }
