@@ -25,7 +25,21 @@
       "correo": "MarioA@test.com",
       "contrasena": "12345",
       "id": "20Sc1lTe28c"
+    },
+    {
+      "primerNombre": "Reynaldo",
+      "segundoNombre": "Josue",
+      "primerApellido": "Fabregas",
+      "segundoApellido": "Montoya",
+      "documento": "1044621438",
+      "fechaNacimiento": "2007-02-20",
+      "telefono": "3237297579",
+      "direccion": "cr58a calle47",
+      "correo": "rrynolds49@gmail.com",
+      "contrasena": "reynalditoelloquito",
+      "id": "p22g05mvSTQ"
     }
   ],
+  "citas": [],
   "$schema": "./node_modules/json-server/schema.json"
 }
