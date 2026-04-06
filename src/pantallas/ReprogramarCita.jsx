@@ -14,7 +14,7 @@ export default function ReprogramarCita() {
       .then((response) => response.json())
       .then((data) => setCitas(data))
       .catch((error) => console.error("Error cargando citas:", error));
-  }, []);
+  }, []); //Trae todas las citas al cargar
 
   useEffect(() => {
     const cita = citas.find((item) => item.id === selectedId);
@@ -23,9 +23,9 @@ export default function ReprogramarCita() {
       setHora(cita.hora);
       setDescripcion(cita.descripcion || "");
     }
-  }, [selectedId, citas]);
+  }, [selectedId, citas]); //Se dispara cada que el usuario elija una cita diferente en el select. Busca este objeto con .find() y prellena los campos.
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => { //Hace PATCH para guardar nuevos datos. luego actualiza el array en pantalla con .map() sin necesidad de volver a llamar la API
     e.preventDefault();
     if (!selectedId) {
       alert("Selecciona primero una cita para reprogramar.");
@@ -42,7 +42,7 @@ export default function ReprogramarCita() {
       alert(`Cita reprogramada para ${fecha} a las ${hora}.`);
       setCitas((prev) =>
         prev.map((cita) =>
-          cita.id === selectedId ? { ...cita, fecha, hora, descripcion } : cita,
+          cita.id === selectedId ? { ...cita, fecha, hora, descripcion } : cita, //aca lo anterior
         ),
       );
     } catch (error) {

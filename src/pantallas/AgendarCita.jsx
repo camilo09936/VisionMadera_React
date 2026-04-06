@@ -6,11 +6,11 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 export default function AgendarCita() {
   const location = useLocation();
   const navigate = useNavigate();
-  const citaEditar = location.state?.cita || null;
+  const citaEditar = location.state?.cita || null; //Si otra pantalla llega aca pasando una cita, llega por location.state, El ?. evita error si no viene nada.
   const [fecha, setFecha] = useState("");
   const [hora, setHora] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false); //Estado booleano que empiieza en false. si llego una cita para editar, useffect lo pone en true y prellena los campos.
 
   useEffect(() => {
     if (citaEditar) {
@@ -21,7 +21,7 @@ export default function AgendarCita() {
     }
   }, [citaEditar]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => { //Decide que metodo usar segun isEdit: True: Patch/ False:POST
     e.preventDefault();
 
     try {

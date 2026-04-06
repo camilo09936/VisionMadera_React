@@ -16,7 +16,7 @@ const Login= () => { //Capturar Datos
 
     useEffect(() => { //Cargar al iniciar
         obtenerUsuarios();
-        const correoGuardado= localStorage.getItem("correoUsuario");
+        const correoGuardado= localStorage.getItem("correoUsuario"); //Trar usuarios y revisa su hay un correo guardado en localStorage
         if (correoGuardado){
             setCorreo(correoGuardado);
             setRecordarme(true);
@@ -35,8 +35,8 @@ const Login= () => { //Capturar Datos
         };
         
         function acceder(e){ //Funcion para validar el acceso
-            e.preventDefault();
-            setError("");
+            e.preventDefault(); //Evita que la pagina recargue
+            setError(""); //Valida que los campos no esten vacios, correo con formato valido regex, y busca el usuario con .find comprando correo y contraseña, si lo encuentra guarda nombre y apellido en localStorage y navega a /home
 
             if(!correo || !contrasena){
                 setError("Por favor, completa todos los campos.");

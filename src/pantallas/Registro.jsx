@@ -5,7 +5,7 @@ import LogoVM from '../assets/ResourcesRegister/LogoVisionMadera.png';
 import VerIcono from '../assets/ResourcesLogin/MostrarContrasena.png';
 import OcultarIcono from '../assets/ResourcesLogin/OcultarContrasena.png';
 
-const Registro = () => {
+const Registro = () => { //Usa un solo estado objeto por todos los campos
     const navigate = useNavigate();
     const [datos, setDatos] = useState({
         primerNombre: "", segundoNombre: "",
@@ -61,7 +61,7 @@ const Registro = () => {
         return Object.keys(nuevosErrores).length===0;
     };
     
-    const manejarCambio=(e) => {
+    const manejarCambio=(e) => { //Captura name y valor del imput que se tocó y actualiza solo ese campo con ...prev sin borrar los demas
         const {name,value}=e.target;
         setDatos(prev=>({...prev,[name]:value}));
         validarCampo(name,value);
@@ -88,7 +88,7 @@ const Registro = () => {
         return /^[0-9]{10,11}$/.test(tel);
     }
 
-    const validarDocumento= async () => { //Validar si el documento ya existe
+    const validarDocumento= async () => { //Validar si el documento ya existe. Se llama con onblur (cuando el usuario sale del campo) y hace fetch a la api para verificar que el documento no exista
         if (!datos.documento) return;
         try{
             const respuesta= await fetch(`http://localhost:3001/usuarios?documento=${datos.documento}`);
@@ -103,7 +103,7 @@ const Registro = () => {
         }
     };
 
-    const validarCampo= (name, value)=>{
+    const validarCampo= (name, value)=>{ //Se llama con cada tecla (Validacion tiempo real).
         let error= "";
         const camposObligatorios=["primerNombre", "primerApellido", "documento", 
                 "fechaNacimiento", "telefono", "direccion", 
@@ -137,7 +137,7 @@ const Registro = () => {
         setErrores(prev=>({...prev,[name]:error}));
     };
 
-    const registrarUsuario= async (e) => {
+    const registrarUsuario= async (e) => { // Valida todo con validarFormulario(), que usa return Object.keys(nuevosErrores).length===0;  el cual determina si hay errores si todo esta bien hace feth POST enviando los datos. Antes de esto elimina confirmarContraseña
         e.preventDefault();
         setError(""); //Limpiar Errores Previos
 

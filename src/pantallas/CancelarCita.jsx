@@ -8,7 +8,7 @@ const [citas, setCitas] = useState([]);
 const navigate = useNavigate();
 
 // Obtener citas
-const obtenerCitas = async () => {
+const obtenerCitas = async () => { //Hace GET y guarda en citas[] 
 try {
 const response = await fetch(`${API_URL}/citas`);
 if (!response.ok) throw new Error("Error al obtener citas");
@@ -24,12 +24,12 @@ if (!response.ok) throw new Error("Error al obtener citas");
 
 useEffect(() => {
 obtenerCitas();
-}, []);
+}, []); //Se llama al cargar
 
 // Eliminar cita
-const eliminarCita = async (id) => {
+const eliminarCita = async (id) => { //Pregunta con confirmar si el usuario accepta hace fetch DELETE. Si la api responde bien, actualiza el array en pantalla con .filter()
 const confirmar = confirm("¿Seguro que deseas cancelar esta cita?");
-if (!confirmar) return;
+if (!confirmar) return; 
 
 try {
   const response = await fetch(`${API_URL}/citas/${id}`, {
@@ -38,7 +38,7 @@ try {
 
   if (!response.ok) throw new Error("Error al eliminar");
 
-  setCitas(citas.filter((cita) => cita.id !== id));
+  setCitas(citas.filter((cita) => cita.id !== id)); //.filter devuelve un nuevo array con todas las citas excepto la que tiene ese id. React Rerenderiza y la fila desaparece.
 } catch (error) {
   console.error(error);
   alert("No se pudo eliminar la cita");

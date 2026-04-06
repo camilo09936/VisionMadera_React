@@ -10,7 +10,7 @@ export default function Home() {
   const nombreUsuario = localStorage.getItem("nombreUsuario") || "Usuario";
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => { //Trae la citas con getCitas, resultado se guarda en citas y se muestra en citas.length
     fetch(`${API_URL}/citas`)
       .then((response) => response.json())
       .then((data) => setCitas(data))
@@ -355,7 +355,7 @@ export default function Home() {
         {/* Próximas citas */}
         <h2 style={{ marginBottom: "15px" }}>Próximas citas</h2>
 
-  {citas.length === 0 ? (
+  {citas.length === 0 ? (///Si citas . length===0 muestra mensaje, sino recorre el array con .map
     <p style={{ color: "#888" }}>
       No tienes citas agendadas 📅
     </p>

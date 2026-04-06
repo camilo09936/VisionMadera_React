@@ -53,13 +53,6 @@
       "id": "fb4_c-Sr2ck"
     }
   ],
-  "citas": [
-    {
-      "fecha": "2026-04-14",
-      "hora": "11:11",
-      "descripcion": "Mi Cita",
-      "id": "O8Lg41VaJX0"
-    }
-  ],
+  "citas": [],
   "$schema": "./node_modules/json-server/schema.json"
 }
