@@ -38,8 +38,28 @@
       "correo": "rrynolds49@gmail.com",
       "contrasena": "reynalditoelloquito",
       "id": "p22g05mvSTQ"
+    },
+    {
+      "primerNombre": "juan",
+      "segundoNombre": "pablo",
+      "primerApellido": "morales",
+      "segundoApellido": "gomez",
+      "documento": "111111",
+      "fechaNacimiento": "2000-12-12",
+      "telefono": "3224455667",
+      "direccion": "32",
+      "correo": "juan.correo@test.com",
+      "contrasena": "1234",
+      "id": "fb4_c-Sr2ck"
     }
   ],
-  "citas": [],
+  "citas": [
+    {
+      "fecha": "2026-04-14",
+      "hora": "11:11",
+      "descripcion": "Mi Cita",
+      "id": "O8Lg41VaJX0"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

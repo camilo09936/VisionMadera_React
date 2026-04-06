@@ -272,7 +272,7 @@ export default function Home() {
           </div>
 
           <div
-            onClick={() => alert("Cancelar cita")}
+            onClick={() => navigate("/cancelar-cita")}
             onMouseEnter={() => setCardHover("cancelar")}
             onMouseLeave={() => setCardHover(null)}
             style={{
@@ -353,95 +353,59 @@ export default function Home() {
         </div>
 
         {/* Próximas citas */}
-        <h2
+        <h2 style={{ marginBottom: "15px" }}>Próximas citas</h2>
+
+  {citas.length === 0 ? (
+    <p style={{ color: "#888" }}>
+      No tienes citas agendadas 📅
+    </p>
+  ) : (
+    citas.map((cita) => (
+      <div
+        key={cita.id}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          padding: "16px 0",
+          borderBottom: "1px solid #eee",
+        }}
+      >
+        {/* FECHA */}
+        <div
           style={{
-            fontSize: 15,
-            fontWeight: 600,
-            marginBottom: 16,
-            color: "#1a1a1a",
+            width: 50,
+            height: 50,
+            borderRadius: 10,
+            backgroundColor: "#FDE6D8",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          Próximas citas
-        </h2>
+          <span style={{ fontWeight: "700", color: "#E8580A" }}>
+            {cita.fecha.split("-")[2]}
+          </span>
+          <span style={{ fontSize: 12, color: "#E8580A" }}>
+            {new Date(cita.fecha).toLocaleString("es-ES", {
+              month: "short",
+            }).toUpperCase()}
+          </span>
+        </div>
 
-        {[
-          {
-            id: 1,
-            dia: "14",
-            mes: "ABR",
-            titulo: "Asesoría de diseño",
-            hora: "10:00 AM",
-            sede: "Chagualo",
-            estado: "confirmada",
-          },
-          {
-            id: 2,
-            dia: "22",
-            mes: "ABR",
-            titulo: "Asesoría de diseño",
-            hora: "2:30 PM",
-            sede: "Palace",
-            estado: "pendiente",
-          },
-        ].map((cita) => (
-          <div
-            key={cita.id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              padding: "16px 0",
-              borderBottom: "1px solid #f0f0f0",
-            }}
-          >
-            <div
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 10,
-                backgroundColor: "#FDF0E8",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 18,
-                  fontWeight: 700,
-                  color: "#E8580A",
-                  lineHeight: 1,
-                }}
-              >
-                {cita.dia}
-              </span>
-              <span style={{ fontSize: 10, color: "#E8580A" }}>{cita.mes}</span>
-            </div>
-
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 500, fontSize: 14 }}>{cita.titulo}</div>
-              <div style={{ fontSize: 12, color: "#888", marginTop: 2 }}>
-                {cita.hora} · {cita.sede}
-              </div>
-            </div>
-
-            <span
-              style={{
-                padding: "3px 12px",
-                borderRadius: 20,
-                fontSize: 11,
-                fontWeight: 600,
-                backgroundColor:
-                  cita.estado === "confirmada" ? "#EAF3DE" : "#FDF0E8",
-                color: cita.estado === "confirmada" ? "#27500A" : "#633806",
-              }}
-            >
-              {cita.estado === "confirmada" ? "Confirmada" : "Pendiente"}
-            </span>
+        {/* INFO */}
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 600 }}>
+            {cita.descripcion || "Cita"}
           </div>
-        ))}
+          <div style={{ fontSize: 12, color: "#888" }}>
+            {cita.hora}
+          </div>
+        </div>
+      </div>
+    ))
+  )}
       </section>
     </div>
   );

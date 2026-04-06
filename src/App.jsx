@@ -4,6 +4,7 @@ import Registro from "./pantallas/Registro";
 import Home from "./pantallas/Home";
 import AgendarCita from "./pantallas/AgendarCita";
 import ReprogramarCita from "./pantallas/ReprogramarCita";
+import CancelarCita from "./pantallas/CancelarCita";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/agendar-cita" element={<AgendarCita />} />
         <Route path="/reprogramar-cita" element={<ReprogramarCita />} />
+        <Route path="/cancelar-cita" element={<CancelarCita />} />
       </Routes>
     </BrowserRouter>
   );
