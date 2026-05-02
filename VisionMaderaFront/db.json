@@ -53,6 +53,13 @@
       "id": "fb4_c-Sr2ck"
     }
   ],
-  "citas": [],
+  "citas": [
+    {
+      "fecha": "2026-04-29",
+      "hora": "15:30",
+      "descripcion": "Cita Con Diseñador de Interiores",
+      "id": "0gwlSbxXBwI"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

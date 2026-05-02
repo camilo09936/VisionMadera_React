@@ -11,6 +11,7 @@
     "api": "json-server --watch db.json --port 3001"
   },
   "dependencies": {
+    "expo": "^55.0.11",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.14.0"

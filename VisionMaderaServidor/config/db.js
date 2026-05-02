@@ -1,0 +1,23 @@
+const { Sequelize }= require('sequelize');
+const DB_TYPE= process.env.DB_TYPE || 'mysql';
+let sequelize;
+if(DB_TYPE==='mysql'){
+    sequelize= new Sequelize('VisonMadera','root','1001015565Sc.',{
+        host: 'localhost',
+        dialect: 'mysql'
+    });
+}
+if (DB_TYPE === "mssql") {
+    sequelize = new Sequelize('VisonMadera','sa','1001015565Sc.',{
+        host: 'localhost',
+        port: 1433,
+        dialect: 'mssql',
+        dialectOptions:{
+            options:{
+                encrypt: false,
+                trustServerCertificate: true
+            }
+        }
+    });
+}
+module.exports=sequelize;
