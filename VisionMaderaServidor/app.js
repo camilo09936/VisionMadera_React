@@ -17,9 +17,9 @@ app.use('/Cita',routesCita);
 app.use('/EstadoCita',routesEstadoCita);
 app.use('/Disenador',routesDisenador);
 app.use('/Sede',routersSede);
-app.use('/api/estado-pago', estadoPagoRoute);
-app.use('/api/metodo-pago', metodoPagoRoute);
-app.use('/api/pago', pagoRoute);
+app.use('/EstadoPago', estadoPagoRoute);
+app.use('/MetodoPago', metodoPagoRoute);
+app.use('/Pago', pagoRoute);
 app.listen(3000, () => {
     console.log(`Servidor corriendo en http://localhost:3000`);
 });
