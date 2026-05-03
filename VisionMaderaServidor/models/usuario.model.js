@@ -7,25 +7,32 @@ const Usuario= sequelize.define("Usuario",{
         autoIncrement: true
     },
     nombre:{
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     apellido:{
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     correo:{
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     contrasena:{
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     telefono:{
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     cedula:{
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     fecha_nacimiento:{
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        allowNull: false
     }
 },{
     tableName:'USUARIO',
