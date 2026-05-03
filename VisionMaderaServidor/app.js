@@ -9,11 +9,17 @@ const routesCita= require('./routes/cita.route');
 const routesEstadoCita= require('./routes/estado_cita.route');
 const routesDisenador= require('./routes/disenador.route');
 const routersSede= require('./routes/sede.route');
+const estadoPagoRoute = require('./routes/estado_pago.route');
+const metodoPagoRoute = require('./routes/metodo_pago.route');
+const pagoRoute = require('./routes/pago.route');
 app.use('/Usuarios',routesUsuario);
 app.use('/Cita',routesCita);
 app.use('/EstadoCita',routesEstadoCita);
 app.use('/Disenador',routesDisenador);
 app.use('/Sede',routersSede);
+app.use('/api/estado-pago', estadoPagoRoute);
+app.use('/api/metodo-pago', metodoPagoRoute);
+app.use('/api/pago', pagoRoute);
 app.listen(3000, () => {
     console.log(`Servidor corriendo en http://localhost:3000`);
 });
