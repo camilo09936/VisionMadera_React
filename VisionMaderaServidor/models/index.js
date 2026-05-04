@@ -4,9 +4,13 @@ const EstadoCita= require('./estado_cita.model');
 const Cita= require('./cita.model');
 const Disenador= require('./disenador.model');
 const Sede= require('./sede.model');
+const Calificacion= require("./calificacion.model");
 const EstadoPago = require('./estado_pago.model');
 const MetodoPago = require('./metodo_pago.model');
 const Pago = require('./pago.model');
+const Pqrs = require('./pqrs.model');
+const TipoPqrs= require('./tipo_pqrs.model');
+const EstadoPqrs= require('./estado_pqrs.model');
 
 EstadoCita.hasMany(Cita,{foreignKey: 'id_estado_cita'});
 Cita.belongsTo(EstadoCita,{foreignKey: 'id_estado_cita'});
@@ -23,23 +27,39 @@ Disenador.belongsTo(Sede,{foreignKey: 'id_sede'});
 Sede.hasMany(Cita, {foreignKey: 'id_sede'});
 Cita.belongsTo(Sede, {foreignKey: 'id_sede'});
 
-MetodoPago.hasMany(Pago, { foreignKey: 'id_metodo_pago' });
-Pago.belongsTo(MetodoPago, { foreignKey: 'id_metodo_pago' });
+Cita.hasOne(Calificacion, {foreignKey: 'id_cita'});
+Calificacion.belongsTo(Cita, {foreignKey: 'id_cita'});
 
 EstadoPago.hasMany(Pago, { foreignKey: 'id_estado_pago' });
 Pago.belongsTo(EstadoPago, { foreignKey: 'id_estado_pago' });
 
+MetodoPago.hasMany(Pago, { foreignKey: 'id_metodo_pago' });
+Pago.belongsTo(MetodoPago, { foreignKey: 'id_metodo_pago' });
+
 Cita.hasOne(Pago, { foreignKey: 'id_cita' });
 Pago.belongsTo(Cita, { foreignKey: 'id_cita' });
+
+Usuario.hasMany(Pqrs, {foreignKey: 'id_usuario'});
+Pqrs.belongsTo(Usuario, {foreignKey: 'id_usuario'});
+
+TipoPqrs.hasMany(Pqrs, {foreignKey: 'id_tipo_pqrs'});
+Pqrs.belongsTo(TipoPqrs, {foreignKey: 'id_tipo_pqrs'});
+
+EstadoPqrs.hasMany(Pqrs, {foreignKey: 'id_estado_pqrs'});
+Pqrs.belongsTo(EstadoPqrs, {foreignKey: 'id_estado_pqrs'});
 
 module.exports = {
     sequelize,
     Usuario,
     EstadoCita,
-    Cita,
-    Disenador,
     Sede,
+    Disenador,
+    Cita,
+    Calificacion,
     EstadoPago,
     MetodoPago,
-    Pago
+    Pago,
+    Pqrs,
+    TipoPqrs,
+    EstadoPqrs
 };
