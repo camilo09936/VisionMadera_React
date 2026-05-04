@@ -10,7 +10,11 @@ exports.getById= async(id_calificacion) => {
     });
 };
 exports.create= async(data) => {
-    return await Calificacion.create(data);
+    return await Calificacion.create({
+        puntaje: data.puntaje,
+        comentario: data.comentario,
+        id_cita: data.id_cita
+    });
 };
 exports.update= async(id_calificacion,data)=>{
     const calificacion=  await Calificacion.findByPk(id_calificacion);

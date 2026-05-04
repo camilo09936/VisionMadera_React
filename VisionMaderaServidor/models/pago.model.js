@@ -22,7 +22,7 @@ const Pago = sequelize.define('Pago', {
     },
     fecha_pago: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+        allowNull: true
     },
     id_cita: {
         type: DataTypes.INTEGER,

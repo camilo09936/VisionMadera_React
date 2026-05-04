@@ -20,7 +20,7 @@ const Calificacion= sequelize.define('Calificacion', {
     },
     fecha:{
         type: DataTypes.DATEONLY,
-        allowNull: false
+        allowNull: true
     },
     id_cita:{
         type: DataTypes.INTEGER,

@@ -11,7 +11,7 @@ const Cita= sequelize.define('Cita',{
         allowNull: false
     },
     hora:{
-        type: DataTypes.TIME,
+        type: DataTypes.STRING,
         allowNull: false
     },
     id_estado_cita:{

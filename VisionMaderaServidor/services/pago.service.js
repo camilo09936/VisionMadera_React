@@ -9,7 +9,12 @@ exports.getById = async (id_pago) => {
 };
 
 exports.create = async (data) => {
-    return await Pago.create(data);
+    return await Pago.create({
+        monto: data.monto,
+        id_metodo_pago: data.id_metodo_pago,
+        id_estado_pago: data.id_estado_pago,
+        id_cita: data.id_cita
+    });
 };
 
 exports.update = async (id_pago, data) => {
