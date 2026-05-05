@@ -60,19 +60,30 @@ export default function AgendarCita() {
       }}
     >
       <style>{`
-        input::placeholder,
-        textarea::placeholder {
-          color: #999;
-          opacity: 1;
-        }
-        input::-webkit-input-placeholder,
-        textarea::-webkit-input-placeholder {
-          color: #999;
-        }
-        input::-moz-placeholder,
-        textarea::-moz-placeholder {
-          color: #999;
-        }
+      input::placeholder,
+      textarea::placeholder {
+      color: #999;
+      opacity: 1;
+      }
+      input[type="date"]::-webkit-datetime-edit,
+      input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+      input[type="date"]::-webkit-datetime-edit-text,
+      input[type="date"]::-webkit-datetime-edit-month-field,
+      input[type="date"]::-webkit-datetime-edit-day-field,
+      input[type="date"]::-webkit-datetime-edit-year-field,
+      input[type="time"]::-webkit-datetime-edit,
+      input[type="time"]::-webkit-datetime-edit-fields-wrapper,
+      input[type="time"]::-webkit-datetime-edit-text,
+      input[type="time"]::-webkit-datetime-edit-hour-field,
+      input[type="time"]::-webkit-datetime-edit-minute-field,
+      input[type="time"]::-webkit-datetime-edit-ampm-field {
+      color: #1a1a1a !important;
+      }
+      input[type="date"]::-webkit-calendar-picker-indicator,
+      input[type="time"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      filter: invert(0.1);
+      }
       `}</style>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
         {/* Encabezado */}

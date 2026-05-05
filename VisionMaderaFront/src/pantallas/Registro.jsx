@@ -68,7 +68,8 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
     };
 
     const validarEmail= (email) =>{ //Validar Formato Email
-        return /\S+@\S+\.\S+/.test(email);
+        const emailRegex= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+        return emailRegex.test(email);
     };
 
     const esMayorDeEdad= (fecha) =>{ //Validacion > 18
@@ -114,7 +115,7 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
             error="Campo obligatorio";
         }
         if(name==="correo" && value && !validarEmail(value)){
-            error="El correo no es válido.";
+            error="El correo no es válido. Debe tener un formato válido (usuario@dominio.com).";
         }
         if(name==="telefono" && value && !validarTelefono(value)){
             error="El teléfono no es válido."
