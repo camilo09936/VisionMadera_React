@@ -59,6 +59,12 @@
       "hora": "15:30",
       "descripcion": "Cita Con Diseñador de Interiores",
       "id": "0gwlSbxXBwI"
+    },
+    {
+      "fecha": "2025-05-25",
+      "hora": "00:12",
+      "descripcion": "me duele el brazo",
+      "id": "T-r8eYuZAbU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
