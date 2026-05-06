@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+const logoUrl = "./src/assets/ResourcesLogin/LogoVisionMadera.png";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
@@ -8,9 +9,16 @@ export default function Home() {
   const [cardHover, setCardHover] = useState(null);
   const [citas, setCitas] = useState([]);
   const nombreUsuario = localStorage.getItem("nombreUsuario") || "Usuario";
+  const fotoPerfil =
+    localStorage.getItem("fotoPerfil") ||
+    "https://via.placeholder.com/80?text=Perfil";
+  const logoUrl =
+    localStorage.getItem("logoUrl") ||
+    "https://via.placeholder.com/150x50?text=Logo";
   const navigate = useNavigate();
 
-  useEffect(() => { //Trae la citas con getCitas, resultado se guarda en citas y se muestra en citas.length
+  useEffect(() => {
+    //Trae la citas con getCitas, resultado se guarda en citas y se muestra en citas.length
     fetch(`${API_URL}/citas`)
       .then((response) => response.json())
       .then((data) => setCitas(data))
@@ -37,9 +45,19 @@ export default function Home() {
           borderBottom: "1px solid #eee",
         }}
       >
-        <span style={{ fontWeight: 700, color: "#E8580A", fontSize: 18 }}>
-          VisiónMadera
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <img
+            src={logoUrl}
+            alt="Logo VisiónMadera"
+            style={{
+              height: 40,
+              objectFit: "contain",
+            }}
+          />
+          <span style={{ fontWeight: 700, color: "#E8580A", fontSize: 18 }}>
+            VisiónMadera
+          </span>
+        </div>
 
         <div style={{ display: "flex", gap: 28 }}>
           <span
@@ -99,35 +117,48 @@ export default function Home() {
           alignItems: "center",
         }}
       >
-        <div>
-          <h1
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <img
+            src={fotoPerfil}
+            alt="Foto de perfil"
             style={{
-              fontSize: 26,
-              fontWeight: 600,
-              marginBottom: 8,
-              color: "#1a1a1a",
+              width: 80,
+              height: 80,
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "3px solid #E8580A",
             }}
-          >
-            Hola, {nombreUsuario}
-          </h1>
-          <p style={{ color: "#666", marginBottom: 24, fontSize: 14 }}>
-            Gestiona tus citas de diseño en Madecentro
-          </p>
-          <button
-            onClick={() => navigate("/agendar-cita")}
-            style={{
-              backgroundColor: "#E8580A",
-              color: "#fff",
-              border: "none",
-              borderRadius: 8,
-              padding: "10px 22px",
-              fontSize: 14,
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
-          >
-            + Agendar nueva cita
-          </button>
+          />
+          <div>
+            <h1
+              style={{
+                fontSize: 26,
+                fontWeight: 600,
+                marginBottom: 8,
+                color: "#1a1a1a",
+              }}
+            >
+              Hola, {nombreUsuario}
+            </h1>
+            <p style={{ color: "#666", marginBottom: 24, fontSize: 14 }}>
+              Gestiona tus citas de diseño en Madecentro
+            </p>
+            <button
+              onClick={() => navigate("/agendar-cita")}
+              style={{
+                backgroundColor: "#E8580A",
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                padding: "10px 22px",
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+              }}
+            >
+              + Agendar nueva cita
+            </button>
+          </div>
         </div>
 
         <div style={{ display: "flex", gap: 12 }}>
@@ -355,57 +386,55 @@ export default function Home() {
         {/* Próximas citas */}
         <h2 style={{ marginBottom: "15px" }}>Próximas citas</h2>
 
-  {citas.length === 0 ? (///Si citas . length===0 muestra mensaje, sino recorre el array con .map
-    <p style={{ color: "#888" }}>
-      No tienes citas agendadas 📅
-    </p>
-  ) : (
-    citas.map((cita) => (
-      <div
-        key={cita.id}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-          padding: "16px 0",
-          borderBottom: "1px solid #eee",
-        }}
-      >
-        {/* FECHA */}
-        <div
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 10,
-            backgroundColor: "#FDE6D8",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <span style={{ fontWeight: "700", color: "#E8580A" }}>
-            {cita.fecha.split("-")[2]}
-          </span>
-          <span style={{ fontSize: 12, color: "#E8580A" }}>
-            {new Date(cita.fecha).toLocaleString("es-ES", {
-              month: "short",
-            }).toUpperCase()}
-          </span>
-        </div>
+        {citas.length === 0 ? ( ///Si citas . length===0 muestra mensaje, sino recorre el array con .map
+          <p style={{ color: "#888" }}>No tienes citas agendadas 📅</p>
+        ) : (
+          citas.map((cita) => (
+            <div
+              key={cita.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                padding: "16px 0",
+                borderBottom: "1px solid #eee",
+              }}
+            >
+              {/* FECHA */}
+              <div
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 10,
+                  backgroundColor: "#FDE6D8",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <span style={{ fontWeight: "700", color: "#E8580A" }}>
+                  {cita.fecha.split("-")[2]}
+                </span>
+                <span style={{ fontSize: 12, color: "#E8580A" }}>
+                  {new Date(cita.fecha)
+                    .toLocaleString("es-ES", {
+                      month: "short",
+                    })
+                    .toUpperCase()}
+                </span>
+              </div>
 
-        {/* INFO */}
-        <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 600 }}>
-            {cita.descripcion || "Cita"}
-          </div>
-          <div style={{ fontSize: 12, color: "#888" }}>
-            {cita.hora}
-          </div>
-        </div>
-      </div>
-    ))
-  )}
+              {/* INFO */}
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 600 }}>
+                  {cita.descripcion || "Cita"}
+                </div>
+                <div style={{ fontSize: 12, color: "#888" }}>{cita.hora}</div>
+              </div>
+            </div>
+          ))
+        )}
       </section>
     </div>
   );
