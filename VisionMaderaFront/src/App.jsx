@@ -5,6 +5,7 @@ import Home from "./pantallas/Home";
 import AgendarCita from "./pantallas/AgendarCita";
 import ReprogramarCita from "./pantallas/ReprogramarCita";
 import CancelarCita from "./pantallas/CancelarCita";
+import PQRS from "./pantallas/PQRS";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/agendar-cita" element={<AgendarCita />} />
         <Route path="/reprogramar-cita" element={<ReprogramarCita />} />
         <Route path="/cancelar-cita" element={<CancelarCita />} />
+        <Route path="/PQRS" element={<PQRS />} />
       </Routes>
     </BrowserRouter>
   );

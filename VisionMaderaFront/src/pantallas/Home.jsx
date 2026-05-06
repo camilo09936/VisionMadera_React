@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-const logoUrl = "./src/assets/ResourcesLogin/LogoVisionMadera.png";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
@@ -8,6 +7,7 @@ export default function Home() {
   const [seccionActiva, setSeccionActiva] = useState("inicio");
   const [cardHover, setCardHover] = useState(null);
   const [citas, setCitas] = useState([]);
+  
   const nombreUsuario = localStorage.getItem("nombreUsuario") || "Usuario";
   const fotoPerfil =
     localStorage.getItem("fotoPerfil") ||
@@ -15,10 +15,10 @@ export default function Home() {
   const logoUrl =
     localStorage.getItem("logoUrl") ||
     "https://via.placeholder.com/150x50?text=Logo";
+    
   const navigate = useNavigate();
 
   useEffect(() => {
-    //Trae la citas con getCitas, resultado se guarda en citas y se muestra en citas.length
     fetch(`${API_URL}/citas`)
       .then((response) => response.json())
       .then((data) => setCitas(data))
@@ -31,9 +31,10 @@ export default function Home() {
         fontFamily: "Poppins, sans-serif",
         backgroundColor: "#FAFAF9",
         minHeight: "100vh",
+        position: "relative",
       }}
     >
-      {/* Barra de navegacion */}
+      {/* 1. BARRA DE NAVEGACIÓN */}
       <nav
         style={{
           display: "flex",
@@ -49,10 +50,7 @@ export default function Home() {
           <img
             src={logoUrl}
             alt="Logo VisiónMadera"
-            style={{
-              height: 40,
-              objectFit: "contain",
-            }}
+            style={{ height: 40, objectFit: "contain" }}
           />
           <span style={{ fontWeight: 700, color: "#E8580A", fontSize: 18 }}>
             VisiónMadera
@@ -61,7 +59,7 @@ export default function Home() {
 
         <div style={{ display: "flex", gap: 28 }}>
           <span
-            onClick={() => setSeccionActiva("inicio")}
+            onClick={() => { setSeccionActiva("inicio"); navigate("/"); }}
             style={{
               cursor: "pointer",
               fontSize: 14,
@@ -72,7 +70,7 @@ export default function Home() {
             Inicio
           </span>
           <span
-            onClick={() => setSeccionActiva("agendar")}
+            onClick={() => navigate("/agendar-cita")}
             style={{
               cursor: "pointer",
               fontSize: 14,
@@ -94,7 +92,7 @@ export default function Home() {
             Mis citas
           </span>
           <span
-            onClick={() => setSeccionActiva("pqrs")}
+            onClick={() => navigate("/pqrs")}
             style={{
               cursor: "pointer",
               fontSize: 14,
@@ -107,7 +105,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Seccion de nombre de ususario */}
+      {/* 2. SECCIÓN DE BIENVENIDA */}
       <section
         style={{
           backgroundColor: "#FDF0E8",
@@ -130,14 +128,7 @@ export default function Home() {
             }}
           />
           <div>
-            <h1
-              style={{
-                fontSize: 26,
-                fontWeight: 600,
-                marginBottom: 8,
-                color: "#1a1a1a",
-              }}
-            >
+            <h1 style={{ fontSize: 26, fontWeight: 600, marginBottom: 8, color: "#1a1a1a" }}>
               Hola, {nombreUsuario}
             </h1>
             <p style={{ color: "#666", marginBottom: 24, fontSize: 14 }}>
@@ -162,101 +153,39 @@ export default function Home() {
         </div>
 
         <div style={{ display: "flex", gap: 12 }}>
-          <div
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 12,
-              padding: "16px 24px",
-              border: "1px solid rgba(232,88,10,0.2)",
-              textAlign: "center",
-            }}
-          >
-            <div style={{ fontSize: 26, fontWeight: 600, color: "#E8580A" }}>
-              {citas.length}
-            </div>
-            <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>
-              Citas activas
-            </div>
+          <div style={{ backgroundColor: "#fff", borderRadius: 12, padding: "16px 24px", border: "1px solid rgba(232,88,10,0.2)", textAlign: "center" }}>
+            <div style={{ fontSize: 26, fontWeight: 600, color: "#E8580A" }}>{citas.length}</div>
+            <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Citas activas</div>
           </div>
-          <div
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 12,
-              padding: "16px 24px",
-              border: "1px solid rgba(232,88,10,0.2)",
-              textAlign: "center",
-            }}
-          >
-            <div style={{ fontSize: 26, fontWeight: 600, color: "#E8580A" }}>
-              {citas.length}
-            </div>
-            <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>
-              Citas realizadas
-            </div>
+          <div style={{ backgroundColor: "#fff", borderRadius: 12, padding: "16px 24px", border: "1px solid rgba(232,88,10,0.2)", textAlign: "center" }}>
+            <div style={{ fontSize: 26, fontWeight: 600, color: "#E8580A" }}>{citas.length}</div>
+            <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Citas realizadas</div>
           </div>
         </div>
       </section>
 
-      {/* Botones de citas , pqrs , etc  */}
+      {/* 3. ACCIONES RÁPIDAS */}
       <section style={{ padding: "32px 48px" }}>
-        <h2
-          style={{
-            fontSize: 15,
-            fontWeight: 600,
-            marginBottom: 16,
-            color: "#1a1a1a",
-          }}
-        >
+        <h2 style={{ fontSize: 15, fontWeight: 600, marginBottom: 16, color: "#1a1a1a" }}>
           Acciones rápidas
         </h2>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 14,
-            marginBottom: 36,
-          }}
-        >
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 36 }}>
           <div
             onClick={() => navigate("/agendar-cita")}
             onMouseEnter={() => setCardHover("agendar")}
             onMouseLeave={() => setCardHover(null)}
             style={{
               backgroundColor: "#fff",
-              border:
-                cardHover === "agendar"
-                  ? "1px solid #E8580A"
-                  : "1px solid #eee",
-              borderRadius: 12,
-              padding: "20px 18px",
-              cursor: "pointer",
-              transform:
-                cardHover === "agendar" ? "translateY(-3px)" : "translateY(0)",
+              border: cardHover === "agendar" ? "1px solid #E8580A" : "1px solid #eee",
+              borderRadius: 12, padding: "20px 18px", cursor: "pointer",
+              transform: cardHover === "agendar" ? "translateY(-3px)" : "translateY(0)",
               transition: "all 0.2s",
             }}
           >
-            <div
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 8,
-                backgroundColor: "#FDF0E8",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 12,
-                fontSize: 20,
-              }}
-            >
-              📅
-            </div>
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>
-              Agendar cita
-            </div>
-            <div style={{ fontSize: 12, color: "#888" }}>
-              Elige fecha, hora y sede
-            </div>
+            <div style={{ width: 38, height: 38, borderRadius: 8, backgroundColor: "#FDF0E8", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, fontSize: 20 }}>📅</div>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Agendar cita</div>
+            <div style={{ fontSize: 12, color: "#888" }}>Elige fecha, hora y sede</div>
           </div>
 
           <div
@@ -265,41 +194,15 @@ export default function Home() {
             onMouseLeave={() => setCardHover(null)}
             style={{
               backgroundColor: "#fff",
-              border:
-                cardHover === "reprogramar"
-                  ? "1px solid #E8580A"
-                  : "1px solid #eee",
-              borderRadius: 12,
-              padding: "20px 18px",
-              cursor: "pointer",
-              transform:
-                cardHover === "reprogramar"
-                  ? "translateY(-3px)"
-                  : "translateY(0)",
+              border: cardHover === "reprogramar" ? "1px solid #E8580A" : "1px solid #eee",
+              borderRadius: 12, padding: "20px 18px", cursor: "pointer",
+              transform: cardHover === "reprogramar" ? "translateY(-3px)" : "translateY(0)",
               transition: "all 0.2s",
             }}
           >
-            <div
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 8,
-                backgroundColor: "#FDF0E8",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 12,
-                fontSize: 20,
-              }}
-            >
-              ✏️
-            </div>
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>
-              Reprogramar
-            </div>
-            <div style={{ fontSize: 12, color: "#888" }}>
-              Cambia fecha u hora
-            </div>
+            <div style={{ width: 38, height: 38, borderRadius: 8, backgroundColor: "#FDF0E8", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, fontSize: 20 }}>✏️</div>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Reprogramar</div>
+            <div style={{ fontSize: 12, color: "#888" }}>Cambia fecha u hora</div>
           </div>
 
           <div
@@ -308,134 +211,88 @@ export default function Home() {
             onMouseLeave={() => setCardHover(null)}
             style={{
               backgroundColor: "#fff",
-              border:
-                cardHover === "cancelar"
-                  ? "1px solid #E8580A"
-                  : "1px solid #eee",
-              borderRadius: 12,
-              padding: "20px 18px",
-              cursor: "pointer",
-              transform:
-                cardHover === "cancelar" ? "translateY(-3px)" : "translateY(0)",
+              border: cardHover === "cancelar" ? "1px solid #E8580A" : "1px solid #eee",
+              borderRadius: 12, padding: "20px 18px", cursor: "pointer",
+              transform: cardHover === "cancelar" ? "translateY(-3px)" : "translateY(0)",
               transition: "all 0.2s",
             }}
           >
-            <div
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 8,
-                backgroundColor: "#FDF0E8",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 12,
-                fontSize: 20,
-              }}
-            >
-              ❌
-            </div>
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>
-              Cancelar cita
-            </div>
-            <div style={{ fontSize: 12, color: "#888" }}>
-              Cancela cuando necesites
-            </div>
+            <div style={{ width: 38, height: 38, borderRadius: 8, backgroundColor: "#FDF0E8", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, fontSize: 20 }}>❌</div>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Cancelar cita</div>
+            <div style={{ fontSize: 12, color: "#888" }}>Cancela cuando necesites</div>
           </div>
 
           <div
-            onClick={() => alert("PQRS")}
+            onClick={() => navigate("/pqrs")}
             onMouseEnter={() => setCardHover("pqrs")}
             onMouseLeave={() => setCardHover(null)}
             style={{
               backgroundColor: "#fff",
-              border:
-                cardHover === "pqrs" ? "1px solid #E8580A" : "1px solid #eee",
-              borderRadius: 12,
-              padding: "20px 18px",
-              cursor: "pointer",
-              transform:
-                cardHover === "pqrs" ? "translateY(-3px)" : "translateY(0)",
+              border: cardHover === "pqrs" ? "1px solid #E8580A" : "1px solid #eee",
+              borderRadius: 12, padding: "20px 18px", cursor: "pointer",
+              transform: cardHover === "pqrs" ? "translateY(-3px)" : "translateY(0)",
               transition: "all 0.2s",
             }}
           >
-            <div
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 8,
-                backgroundColor: "#FDF0E8",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 12,
-                fontSize: 20,
-              }}
-            >
-              💬
-            </div>
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>
-              PQRS
-            </div>
-            <div style={{ fontSize: 12, color: "#888" }}>
-              Soporte y solicitudes
-            </div>
+            <div style={{ width: 38, height: 38, borderRadius: 8, backgroundColor: "#FDF0E8", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, fontSize: 20 }}>💬</div>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>PQRS</div>
+            <div style={{ fontSize: 12, color: "#888" }}>Soporte y solicitudes</div>
           </div>
         </div>
 
-        {/* Próximas citas */}
-        <h2 style={{ marginBottom: "15px" }}>Próximas citas</h2>
-
-        {citas.length === 0 ? ( ///Si citas . length===0 muestra mensaje, sino recorre el array con .map
+        <h2 style={{ marginBottom: "15px", fontSize: 18 }}>Próximas citas</h2>
+        {citas.length === 0 ? (
           <p style={{ color: "#888" }}>No tienes citas agendadas 📅</p>
         ) : (
           citas.map((cita) => (
-            <div
-              key={cita.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 16,
-                padding: "16px 0",
-                borderBottom: "1px solid #eee",
-              }}
-            >
-              {/* FECHA */}
-              <div
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 10,
-                  backgroundColor: "#FDE6D8",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <span style={{ fontWeight: "700", color: "#E8580A" }}>
-                  {cita.fecha.split("-")[2]}
-                </span>
-                <span style={{ fontSize: 12, color: "#E8580A" }}>
-                  {new Date(cita.fecha)
-                    .toLocaleString("es-ES", {
-                      month: "short",
-                    })
-                    .toUpperCase()}
-                </span>
+            <div key={cita.id} style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 0", borderBottom: "1px solid #eee" }}>
+              <div style={{ width: 50, height: 50, borderRadius: 10, backgroundColor: "#FDE6D8", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontWeight: "700", color: "#E8580A" }}>{cita.fecha.split("-")[2]}</span>
+                <span style={{ fontSize: 12, color: "#E8580A" }}>{new Date(cita.fecha).toLocaleString("es-ES", { month: "short" }).toUpperCase()}</span>
               </div>
-
-              {/* INFO */}
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600 }}>
-                  {cita.descripcion || "Cita"}
-                </div>
+                <div style={{ fontWeight: 600 }}>{cita.descripcion || "Cita de diseño"}</div>
                 <div style={{ fontSize: 12, color: "#888" }}>{cita.hora}</div>
               </div>
             </div>
           ))
         )}
       </section>
+
+      {/* 5. BOTÓN PQRS */}
+      <div
+        onClick={() => navigate("/pqrs")}
+        onMouseEnter={() => setCardHover("btn-flotante")}
+        onMouseLeave={() => setCardHover(null)}
+        style={{
+          position: "fixed",
+          bottom: "30px",
+          left: "30px", 
+          backgroundColor: "#E8580A",
+          color: "white",
+          width: cardHover === "btn-flotante" ? "180px" : "60px",
+          height: "60px",
+          borderRadius: "30px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          boxShadow: "0 4px 15px rgba(232, 88, 10, 0.4)",
+          transition: "all 0.3s ease", // Transición simple
+          zIndex: 1000,
+          overflow: "hidden",
+          padding: "0 15px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", whiteSpace: "nowrap" }}>
+          <span style={{ fontSize: "24px" }}>💬</span>
+          {cardHover === "btn-flotante" && (
+            <span style={{ fontSize: "14px", fontWeight: "600" }}>
+              ¿Necesitas ayuda?
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
