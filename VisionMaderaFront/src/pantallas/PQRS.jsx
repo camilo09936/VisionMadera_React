@@ -77,7 +77,7 @@ export default function Pqrs() {
             <select 
               required
               style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd" }}
-              value={formData.id_tipo_pqrs} // IMPORTANTE: Vincular al estado
+              value={formData.id_tipo_pqrs} //  Vincular al estado
               onChange={(e) => setFormData({...formData, id_tipo_pqrs: e.target.value})}
             >
               <option value="">Seleccione...</option>
