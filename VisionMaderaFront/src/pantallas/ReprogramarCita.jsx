@@ -69,15 +69,29 @@ export default function ReprogramarCita() {
       }}
     >
       <style>{`
-        input::placeholder,
-        textarea::placeholder,
-        select {
-          color: #9b9b9b;
-          opacity: 1;
+      input::placeholder,
+      textarea::placeholder,
+      select {
+      color: #9b9b9b;
+      opacity: 1;
+      }
+      input[type="date"]::-webkit-datetime-edit,
+      input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+      input[type="date"]::-webkit-datetime-edit-text,
+      input[type="date"]::-webkit-datetime-edit-month-field,
+      input[type="date"]::-webkit-datetime-edit-day-field,
+      input[type="date"]::-webkit-datetime-edit-year-field,
+      input[type="time"]::-webkit-datetime-edit,
+      input[type="time"]::-webkit-datetime-edit-fields-wrapper,
+      input[type="time"]::-webkit-datetime-edit-text,
+      input[type="time"]::-webkit-datetime-edit-hour-field,
+      input[type="time"]::-webkit-datetime-edit-minute-field,
+      input[type="time"]::-webkit-datetime-edit-ampm-field {
+        color: #333;
         }
-      `}</style>
-      <div style={{ maxWidth: "520px", margin: "0 auto" }}>
-        <h1
+        `}</style>
+        <div style={{ maxWidth: "520px", margin: "0 auto" }}>
+          <h1
           style={{
             color: "#E8580A",
             textAlign: "center",
