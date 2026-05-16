@@ -1,178 +1,250 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export default function CancelarCita() {
-const [citas, setCitas] = useState([]);
-const navigate = useNavigate();
+  const [citas, setCitas] = useState([]);
+  const [mostrarModalError, setMostrarModalError] = useState(false);
+  const [mensajeModal, setMensajeModal] = useState("");
+  const navigate = useNavigate();
 
-// Obtener citas
-const obtenerCitas = async () => { //Hace GET y guarda en citas[] 
-try {
-const response = await fetch(`${API_URL}/citas`);
-if (!response.ok) throw new Error("Error al obtener citas");
+  // Diccionarios de datos
+  const nombresSedes = {
+    1: "Sede Norte",
+    2: "Sede Sur",
+    3: "Sede Centro",
+    4: "Sede Bello",
+    5: "Sede Itagüí"
+  };
 
-  const data = await response.json();
-  setCitas(data);
-} catch (error) {
-  console.error(error);
-  alert("No se pudieron cargar las citas");
-}
+  const horasBloques = {
+    1: "08:00 - 10:00",
+    2: "10:00 - 12:00",
+    3: "12:00 - 14:00",
+    4: "14:00 - 16:00"
+  };
 
-};
+  // Obtener la lista de citas 
+  const obtenerCitas = async () => {
+    try {
+      const response = await fetch(`${API_URL}/Cita`);
+      
+      if (!response.ok) {
+        throw new Error(`Error en el servidor: ${response.status}`);
+      }
 
-useEffect(() => {
-obtenerCitas();
-}, []); //Se llama al cargar
+      const data = await response.json();
+      
+      if (data && Array.isArray(data)) {
+        setCitas(data);
+      } else if (data && Array.isArray(data.data)) {
+        setCitas(data.data);
+      } else {
+        setCitas([]);
+      }
+    } catch (error) {
+      console.error("Error cargando citas para cancelar:", error);
+      setMensajeModal("No se pudieron cargar las citas");
+      setMostrarModalError(true);
+      setCitas([]);
+    }
+  };
 
-// Eliminar cita
-const eliminarCita = async (id) => { //Pregunta con confirmar si el usuario accepta hace fetch DELETE. Si la api responde bien, actualiza el array en pantalla con .filter()
-const confirmar = confirm("¿Seguro que deseas cancelar esta cita?");
-if (!confirmar) return; 
+  useEffect(() => {
+    obtenerCitas();
+  }, []);
 
-try {
-  const response = await fetch(`${API_URL}/citas/${id}`, {
-    method: "DELETE",
-  });
+  // Función para procesar la cancelación
+  const gestionarCancelarCita = async (idCita) => {
+    if (!window.confirm("¿Estás seguro de que deseas cancelar esta cita?")) {
+      return;
+    }
 
-  if (!response.ok) throw new Error("Error al eliminar");
+    try {
+      const response = await fetch(`${API_URL}/Cita/${idCita}`, {
+        method: "DELETE",
+      });
 
-  setCitas(citas.filter((cita) => cita.id !== id)); //.filter devuelve un nuevo array con todas las citas excepto la que tiene ese id. React Rerenderiza y la fila desaparece.
-} catch (error) {
-  console.error(error);
-  alert("No se pudo eliminar la cita");
-}
+      if (!response.ok) {
+        throw new Error("No se pudo eliminar la cita en el servidor.");
+      }
 
-};
+      // Refrescar las citas restantes tras una eliminación exitosa
+      obtenerCitas();
+    } catch (error) {
+      console.error("Error al intentar cancelar la cita:", error);
+      setMensajeModal("No se pudo procesar la cancelación de la cita en este momento.");
+      setMostrarModalError(true);
+    }
+  };
 
-return (
-<div
-style={{
-fontFamily: "Poppins, sans-serif",
-backgroundColor: "#FAFAF9",
-minHeight: "100vh",
-padding: "40px 20px",
-position: "relative",
-}}
->
-{/* BOTÓN VOLVER */}
-<button
-onClick={() => navigate("/home")}
-style={{
-position: "absolute",
-top: "20px",
-left: "20px",
-backgroundColor: "#fff",
-border: "1px solid #ddd",
-borderRadius: "50%",
-width: "42px",
-height: "42px",
-cursor: "pointer",
-fontSize: "20px",
-boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-}}
->
-🔙 </button>
-
-  <h1
-    style={{
-      color: "#E8580A",
-      textAlign: "center",
-      marginBottom: "30px",
-    }}
-  >
-    Cancelar Citas
-  </h1>
-
-  {/*  CONTENEDOR TABLA */}
-  <div
-    style={{
-      maxWidth: "1000px",
-      margin: "0 auto",
-      backgroundColor: "#fff",
-      padding: "30px",
-      borderRadius: "10px",
-      border: "1px solid #eee",
-    }}
-  >
-    <table
+  return (
+    <div
       style={{
-        width: "100%",
-        borderCollapse: "collapse",
+        fontFamily: "Poppins, sans-serif",
+        backgroundColor: "#FAFAF9",
+        minHeight: "100vh",
+        padding: "40px 20px",
+        position: "relative",
       }}
     >
-      <thead>
-        <tr
+      {/* BOTÓN VOLVER */}
+      <button
+        onClick={() => navigate("/home")}
+        style={{
+          position: "absolute",
+          top: "30px",
+          left: "30px",
+          backgroundColor: "#fff",
+          border: "1px solid #ccc",
+          borderRadius: "50%",
+          width: "45px",
+          height: "45px",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+          fontWeight: "bold",
+          fontSize: "14px"
+        }}
+      >
+        ⬅
+      </button>
+
+      {/* TÍTULO */}
+      <h1
+        style={{
+          textAlign: "center",
+          color: "#E8580A",
+          fontSize: "32px",
+          fontWeight: "700",
+          marginBottom: "40px",
+        }}
+      >
+        Cancelar Citas
+      </h1>
+
+      {/* CONTENEDOR DE LA TABLA */}
+      <div
+        style={{
+          backgroundColor: "#fff",
+          borderRadius: "12px",
+          padding: "32px",
+          maxWidth: "1000px",
+          margin: "0 auto",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+          border: "1px solid #eee",
+        }}
+      >
+        <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+          <thead>
+            <tr style={{ borderBottom: "2px solid #E8580A" }}>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Fecha</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Hora</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Descripción</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Sede</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600", textAlign: "center" }}>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {citas.length === 0 ? (
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center", color: "#888", padding: "40px 0", fontSize: "14px" }}>
+                  No hay citas registradas 📅
+                </td>
+              </tr>
+            ) : (
+              citas.map((cita) => {
+                const idCitaReal = cita.id_cita || cita.id;
+                const sedeTexto = nombresSedes[cita.id_sede] || `Sede (ID: ${cita.id_sede})`;
+                const horaTexto = horasBloques[cita.id_bloque] || "Por confirmar";
+
+                return (
+                  <tr key={idCitaReal} style={{ borderBottom: "1px solid #f5f5f5" }}>
+                    <td style={{ padding: "16px 8px", fontSize: "14px", color: "#333" }}>{cita.fecha}</td>
+                    <td style={{ padding: "16px 8px", fontSize: "14px", color: "#333" }}>{horaTexto}</td>
+                    <td style={{ padding: "16px 8px", fontSize: "14px", color: "#555" }}>
+                      Cita de Diseño Especializado
+                    </td>
+                    <td style={{ padding: "16px 8px", fontSize: "14px", color: "#333" }}>{sedeTexto}</td>
+                    <td style={{ padding: "16px 8px", textAlign: "center" }}>
+                      <button
+                        onClick={() => gestionarCancelarCita(idCitaReal)}
+                        style={{
+                          backgroundColor: "#E8580A",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "8px 16px",
+                          fontSize: "13px",
+                          fontWeight: "500",
+                          cursor: "pointer",
+                          transition: "background-color 0.2s"
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = "#c64604"}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = "#E8580A"}
+                      >
+                        Cancelar Cita
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* VENTANA EMERGENTE (MODAL ERROR) */}
+      {mostrarModalError && (
+        <div
           style={{
-            borderBottom: "2px solid #E8580A",
-            textAlign: "left",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 2000,
           }}
         >
-          <th style={{ padding: "12px" }}>Fecha</th>
-          <th style={{ padding: "12px" }}>Hora</th>
-          <th style={{ padding: "12px" }}>Descripción</th>
-          <th style={{ padding: "12px" }}>Sede</th>
-          <th style={{ padding: "12px", textAlign: "center" }}>
-            Acción
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {citas.length === 0 ? (
-          <tr>
-            <td
-              colSpan="5"
-              style={{
-                textAlign: "center",
-                padding: "25px",
-                color: "#888",
-              }}
-            >
-              No hay citas registradas 📅
-            </td>
-          </tr>
-        ) : (
-          citas.map((cita) => (
-            <tr
-              key={cita.id}
-              style={{
-                borderBottom: "1px solid #f1f1f1",
-              }}
-            >
-              <td style={{ padding: "14px" }}>{cita.fecha}</td>
-              <td style={{ padding: "14px" }}>{cita.hora}</td>
-              <td style={{ padding: "14px" }}>
-                {cita.descripcion || "Sin descripción"}
-              </td>
-              <td style={{ padding: "14px" }}>
-                {cita.lugar || "Sin sede"}
-              </td>
-
-              <td style={{ textAlign: "center" }}>
-                <button
-                  onClick={() => eliminarCita(cita.id)}
-                  style={{
-                    backgroundColor: "#fff",
-                    color: "red",
-                    border: "1px solid #eee",
-                    borderRadius: "6px",
-                    padding: "6px 10px",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                  }}
-                >
-                  ✖
-                </button>
-              </td>
-            </tr>
-          ))
-        )}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-);
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: "24px 32px",
+              borderRadius: "16px",
+              maxWidth: "400px",
+              width: "90%",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+              textAlign: "left",
+            }}
+          >
+            <p style={{ color: "#333", fontSize: "15px", marginBottom: "24px", lineHeight: "1.5" }}>
+              {mensajeModal}
+            </p>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <button
+                onClick={() => setMostrarModalError(false)}
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#E8580A",
+                  border: "none",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

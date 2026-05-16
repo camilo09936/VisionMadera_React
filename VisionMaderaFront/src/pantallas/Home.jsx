@@ -8,21 +8,40 @@ export default function Home() {
   const [cardHover, setCardHover] = useState(null);
   const [citas, setCitas] = useState([]);
   
-  const nombreUsuario = localStorage.getItem("nombreUsuario") || "Usuario";
+  const nombreUsuario = localStorage.getItem("nombreUsuario") || "JUAN MORALES";
   const fotoPerfil =
     localStorage.getItem("fotoPerfil") ||
     "https://via.placeholder.com/80?text=Perfil";
-  /*const logoUrl =
-    localStorage.getItem("logoUrl") ||
-    "https://via.placeholder.com/150x50?text=Logo";*/
     
   const navigate = useNavigate();
 
+  // Traer citas de forma segura controlando errores 500 o estructuras vacías
   useEffect(() => {
-    fetch(`${API_URL}/citas`)
-      .then((response) => response.json())
-      .then((data) => setCitas(data))
-      .catch((error) => console.error("Error cargando citas:", error));
+    const obtenerCitas = async () => {
+      try {
+        const response = await fetch(`${API_URL}/Cita`);
+        
+        if (!response.ok) {
+          throw new Error(`Error en el servidor: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Validamos la estructura del JSON devuelto por Sequelize
+        if (data && Array.isArray(data)) {
+          setCitas(data);
+        } else if (data && Array.isArray(data.data)) {
+          setCitas(data.data);
+        } else {
+          setCitas([]);
+        }
+      } catch (error) {
+        console.error("Error cargando citas en el Frontend:", error);
+        setCitas([]); 
+      }
+    };
+
+    obtenerCitas();
   }, []);
 
   return (
@@ -47,11 +66,6 @@ export default function Home() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/*<img
-            src={logoUrl}
-            alt="Logo VisiónMadera"
-            style={{ height: 40, objectFit: "contain" }}
-          />*/}
           <span style={{ fontWeight: 700, color: "#E8580A", fontSize: 18 }}>
             VisiónMadera
           </span>
@@ -229,26 +243,65 @@ export default function Home() {
           </div>
         </div>
 
-        <h2 style={{ marginBottom: "15px", fontSize: 18 }}>Próximas citas</h2>
+        <h2 style={{ marginBottom: "15px", fontSize: 18, fontWeight: 600 }}>Próximas citas</h2>
         {citas.length === 0 ? (
-          <p style={{ color: "#888" }}>No tienes citas agendadas 📅</p>
+          <p style={{ color: "#888", fontSize: 14 }}>No tienes citas agendadas 📅</p>
         ) : (
-          citas.map((cita) => (
-            <div key={cita.id} style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 0", borderBottom: "1px solid #eee" }}>
-              <div style={{ width: 50, height: 50, borderRadius: 10, backgroundColor: "#FDE6D8", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontWeight: "700", color: "#E8580A" }}>{cita.fecha.split("-")[2]}</span>
-                <span style={{ fontSize: 12, color: "#E8580A" }}>{new Date(cita.fecha).toLocaleString("es-ES", { month: "short" }).toUpperCase()}</span>
+          citas.map((cita) => {
+            // Extracción segura del día del campo DATEONLY ('YYYY-MM-DD')
+            const partesFecha = cita.fecha ? cita.fecha.split("-") : ["0000", "00", "00"];
+            const diaNum = partesFecha[2] || "00";
+            
+            // Generar el nombre de mes abreviado seguro
+            let nombreMes = "MES";
+            if (cita.fecha) {
+              const dateObj = new Date(cita.fecha + "T00:00:00");
+              if (!isNaN(dateObj.getTime())) {
+                nombreMes = dateObj.toLocaleString("es-ES", { month: "short" }).toUpperCase().replace(".", "");
+              }
+            }
+
+            // 1. DICCIONARIO DE SEDES (Según tu base de datos)
+            const nombresSedes = {
+              1: "Sede Norte",
+              2: "Sede Sur",
+              3: "Sede Centro",
+              4: "Sede Bello",
+              5: "Sede Itagüí"
+            };
+            
+            // 2. DICCIONARIO DE HORARIOS (Según los logs de tu consola)
+            const horasBloques = {
+              1: "8:00 - 10:00",
+              2: "10:00 - 12:00",
+              3: "12:00 - 14:00",
+              4: "14:00 - 16:00"
+            };
+            
+            const nombreSedeReal = nombresSedes[cita.id_sede] || `Sede (ID: ${cita.id_sede})`;
+            const horaReal = horasBloques[cita.id_bloque] || "Horario por confirmar";
+
+            return (
+              <div key={cita.id_cita || cita.id} style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 0", borderBottom: "1px solid #eee" }}>
+                <div style={{ width: 50, height: 50, borderRadius: 10, backgroundColor: "#FDE6D8", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontWeight: "700", color: "#E8580A", fontSize: 14 }}>{diaNum}</span>
+                  <span style={{ fontSize: 10, color: "#E8580A", fontWeight: 600 }}>{nombreMes}</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 15, color: "#1a1a1a" }}>
+                    Cita de Diseño Especializado
+                  </div>
+                  <div style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
+                    📍 {nombreSedeReal} • 🕒 {horaReal}
+                  </div>
+                </div>
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600 }}>{cita.descripcion || "Cita de diseño"}</div>
-                <div style={{ fontSize: 12, color: "#888" }}>{cita.hora}</div>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </section>
 
-      {/* 5. BOTÓN PQRS */}
+      {/* 5. BOTÓN FLOTANTE DE PQRS (Movido a la esquina inferior derecha) */}
       <div
         onClick={() => navigate("/pqrs")}
         onMouseEnter={() => setCardHover("btn-flotante")}
@@ -256,7 +309,7 @@ export default function Home() {
         style={{
           position: "fixed",
           bottom: "30px",
-          left: "30px", 
+          right: "30px", 
           backgroundColor: "#E8580A",
           color: "white",
           width: cardHover === "btn-flotante" ? "180px" : "60px",
@@ -267,7 +320,7 @@ export default function Home() {
           justifyContent: "center",
           cursor: "pointer",
           boxShadow: "0 4px 15px rgba(232, 88, 10, 0.4)",
-          transition: "all 0.3s ease", // Transición simple
+          transition: "all 0.3s ease",
           zIndex: 1000,
           overflow: "hidden",
           padding: "0 15px",

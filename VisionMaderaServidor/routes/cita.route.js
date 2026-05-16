@@ -1,9 +1,12 @@
-const express= require('express');
-const router= express.Router();
-const controller= require('../controllers/cita.controller');
-router.get('/',             controller.getAll);
-router.get('/:id_cita',     controller.getById);
-router.post('/',            controller.create);
-router.put('/:id_cita',     controller.update);
-router.delete('/:id_cita',  controller.delete);
+const express = require('express');
+const router = express.Router();
+const citaController = require('../controllers/cita.controller');
+
+router.get('/', citaController.getAll);
+router.get('/ocupados', citaController.getBloquesOcupados);
+router.get('/:id', citaController.getById);
+router.post('/', citaController.create);
+router.put('/:id', citaController.update);
+router.delete('/:id', citaController.delete);
+
 module.exports = router;

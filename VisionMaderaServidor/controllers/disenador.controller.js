@@ -1,12 +1,15 @@
 const { json }= require('sequelize');
-const service= require('../services/disenador.service');
-exports.getAll=async(req,res)=>{
-    try{
-        const data= await service.getAll();
-        res.json(data);
-    }catch(err){
-        res.status(500).json({error: err.message});
-    }
+const service = require('../services/disenador.service');
+
+exports.getAll = async (req, res) => {
+  try {
+    const { id_sede } = req.query; 
+    const filtros = id_sede ? { where: { id_sede: id_sede } } : {};
+    const data = await service.getAll(filtros); 
+    res.json({ data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 exports.getById= async(req,res)=>{
     try{

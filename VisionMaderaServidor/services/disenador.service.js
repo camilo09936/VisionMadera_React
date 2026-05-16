@@ -1,6 +1,6 @@
 const { Disenador }= require('../models');
-exports.getAll=async() => {
-    return await Disenador.findAll();
+exports.getAll = async (filtros = {}) => { 
+  return await Disenador.findAll(filtros); 
 };
 exports.getById= async (id_disenador) => {
     return await Disenador.findByPk(id_disenador);

@@ -55,7 +55,7 @@ export default function Pqrs() {
 
       if (response.ok) {
         alert("¡PQRS enviada con éxito!");
-        navigate("/"); // Redirige al home tras el éxito
+        navigate("/home"); // Redirige al home tras el éxito
       } else {
         alert("Hubo un error al enviar al servidor");
       }
