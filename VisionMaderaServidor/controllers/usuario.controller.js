@@ -10,7 +10,7 @@ exports.getAll= async (req,res)=>{
 };
 exports.getById= async (req,res)=>{
     try{
-        const data= await service.getById(req.params.id_usuario);
+        const data= await service.getById(req.params.documento);
         if(!data){
             return res.status(404).json({mensaje: 'Usuario no encontrado'});
         }
@@ -32,7 +32,7 @@ exports.create= async (req,res)=>{
 };
 exports.update= async (req,res)=>{
     try{
-        const data= await service.update(req.params.id_usuario, req.body);
+        const data= await service.update(req.params.documento, req.body);
         if(!data){
             return res.status(404).json({mensaje: 'Usuario no encontrado'});
         }
@@ -43,7 +43,7 @@ exports.update= async (req,res)=>{
 };
 exports.delete= async (req,res)=>{
     try{
-        const data= await service.delete(req.params.id_usuario);
+        const data= await service.delete(req.params.documento);
         if(!data){
             return res.status(404).json({mensaje: 'Usuario no encontrado'})
         }   

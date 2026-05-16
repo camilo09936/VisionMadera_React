@@ -20,4 +20,4 @@ if (DB_TYPE === "mssql") {
         }
     });
 }
-module.exports=sequelize;
+module.exports=sequelize; //MVC Extendido

@@ -8,9 +8,9 @@ import OcultarIcono from '../assets/ResourcesLogin/OcultarContrasena.png';
 const Registro = () => { //Usa un solo estado objeto por todos los campos
     const navigate = useNavigate();
     const [datos, setDatos] = useState({
-        primerNombre: "", segundoNombre: "",
-        primerApellido: "", segundoApellido: "",
-        documento: "", fechaNacimiento: "",
+        nombre1: "", nombre2: "",
+        apellido1: "", apellido2: "",
+        documento: "", fecha_nacimiento: "",
         telefono: "", direccion: "",
         correo: "", contrasena: "", confirmarContrasena: ""
     });
@@ -26,10 +26,10 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
         }else if (!validarEmail(datos.correo)){
             nuevosErrores.correo= "El correo no es válido."
         }
-        if (!datos.fechaNacimiento){
-            nuevosErrores.fechaNacimiento= "Campo obligatorio";
-        } else if (!esMayorDeEdad(datos.fechaNacimiento)){
-            nuevosErrores.fechaNacimiento= "Debes ser mayor de 18 años.";
+        if (!datos.fecha_nacimiento){
+            nuevosErrores.fecha_nacimiento= "Campo obligatorio";
+        } else if (!esMayorDeEdad(datos.fecha_nacimiento)){
+            nuevosErrores.fecha_nacimiento= "Debes ser mayor de 18 años.";
         }
         if (!datos.telefono.trim()){
             nuevosErrores.telefono= "Campo obligatorio";
@@ -39,11 +39,11 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
         if(datos.contrasena !== datos.confirmarContrasena){
             nuevosErrores.confirmarContrasena= "Las contraseñas no coinciden.";
         }
-        if (!datos.primerNombre.trim()) {
-            nuevosErrores.primerNombre = "Campo obligatorio";
+        if (!datos.nombre1.trim()) {
+            nuevosErrores.nombre1 = "Campo obligatorio";
         }
-        if (!datos.primerApellido.trim()) {
-            nuevosErrores.primerApellido = "Campo obligatorio";
+        if (!datos.apellido1.trim()) {
+            nuevosErrores.apellido1 = "Campo obligatorio";
         }
         if (!datos.documento.trim()) {
             nuevosErrores.documento = "Campo obligatorio";
@@ -92,7 +92,7 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
     const validarDocumento= async () => { //Validar si el documento ya existe. Se llama con onblur (cuando el usuario sale del campo) y hace fetch a la api para verificar que el documento no exista
         if (!datos.documento) return;
         try{
-            const respuesta= await fetch(`http://localhost:3001/usuarios?documento=${datos.documento}`);
+            const respuesta= await fetch(`http://localhost:3000/Usuarios?documento=${datos.documento}`);
             const usuarios= await respuesta.json();
             if (usuarios.length>0){
                 setErrores(prev=>({...prev,documento: "Documento ya registrado."}));
@@ -106,8 +106,8 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
 
     const validarCampo= (name, value)=>{ //Se llama con cada tecla (Validacion tiempo real).
         let error= "";
-        const camposObligatorios=["primerNombre", "primerApellido", "documento", 
-                "fechaNacimiento", "telefono", "direccion", 
+        const camposObligatorios=["nombre1", "apellido1", "documento", 
+                "fecha_nacimiento", "telefono", "direccion", 
                 "correo", "contrasena", "confirmarContrasena"
         ];
 
@@ -120,7 +120,7 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
         if(name==="telefono" && value && !validarTelefono(value)){
             error="El teléfono no es válido."
         }
-        if(name==="fechaNacimiento" && value && !esMayorDeEdad(value)){
+        if(name==="fecha_nacimiento" && value && !esMayorDeEdad(value)){
             error= "Debes ser mayor de 18 años";
         }
         if(name==="confirmarContrasena"){
@@ -156,7 +156,7 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
 
         const {confirmarContrasena, ...datosFinales}= datos //Quitar confirmar contraseña antes de enviar a API
         try{
-            const response= await fetch("http://localhost:3001/usuarios",{
+            const response= await fetch("http://localhost:3000/Usuarios",{
                 method:"POST",
                 headers:{ "Content-Type": "application/json" },
                 body: JSON.stringify(datosFinales)
@@ -185,62 +185,62 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
                         <div className="campo-registro">
                             <input 
                                 type="text" 
-                                name="primerNombre" 
+                                name="nombre1" 
                                 placeholder="" 
                                 required 
                                 onChange={manejarCambio} 
-                                className={errores.primerNombre ? "input-error" : datos.primerNombre ? "input-correcto" : ""}
+                                className={errores.nombre1 ? "input-error" : datos.nombre1 ? "input-correcto" : ""}
                             />
                             <label>Primer Nombre</label>
-                            {!errores.primerNombre && datos.primerNombre.trim() && (
+                            {!errores.nombre1 && datos.nombre1.trim() && (
                                 <span className="check-correcto">✔</span>
                                 )}
-                                {errores.primerNombre && (
-                                    <span className="mensaje-campo-error">{errores.primerNombre}
+                                {errores.nombre1 && (
+                                    <span className="mensaje-campo-error">{errores.nombre1}
                                     </span>
                                 )}
                         </div>
                         <div className="campo-registro">
                             <input 
                                 type="text" 
-                                name="segundoNombre" 
+                                name="nombre2" 
                                 placeholder="" 
                                 onChange={manejarCambio}
-                                className={errores.segundoNombre ? "input-error" : datos.segundoNombre ? "input-correcto" : ""}
+                                className={errores.nombre2 ? "input-error" : datos.nombre2 ? "input-correcto" : ""}
                             />
                             <label>Segundo Nombre</label>
-                            {!errores.segundoNombre && datos.segundoNombre.trim() && (
+                            {!errores.nombre2 && datos.nombre2.trim() && (
                                 <span className="check-correcto">✔</span>
                                 )}
                         </div>
                         <div className="campo-registro">
                             <input 
                                 type="text" 
-                                name="primerApellido" 
+                                name="apellido1" 
                                 placeholder="" 
                                 required 
                                 onChange={manejarCambio}
-                                className={errores.primerApellido ? "input-error" : datos.primerApellido ? "input-correcto" : ""}
+                                className={errores.apellido1 ? "input-error" : datos.apellido1 ? "input-correcto" : ""}
                             />
                             <label>Primer Apellido</label>
-                            {!errores.primerApellido && datos.primerApellido.trim() && (
+                            {!errores.apellido1 && datos.apellido1.trim() && (
                                 <span className="check-correcto">✔</span>
                                 )}
-                                {errores.primerApellido && (
-                                    <span className="mensaje-campo-error">{errores.primerApellido}
+                                {errores.apellido1 && (
+                                    <span className="mensaje-campo-error">{errores.apellido1}
                                     </span>
                                 )}
                         </div>
                         <div className="campo-registro">
                             <input 
                                 type="text" 
-                                name="segundoApellido" 
+                                name="apellido2" 
                                 placeholder="" 
                                 onChange={manejarCambio}
-                                className={errores.segundoApellido ? "input-error" : datos.segundoApellido ? "input-correcto" : ""}
+                                className={errores.apellido2 ? "input-error" : datos.apellido2 ? "input-correcto" : ""}
                             />
                             <label>Segundo Apellido</label>
-                            {!errores.segundoApellido && datos.segundoApellido.trim() && (
+                            {!errores.apellido2 && datos.apellido2.trim() && (
                                 <span className="check-correcto">✔</span>
                                 )}
                         </div>
@@ -266,18 +266,18 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
                         <div className="campo-registro">
                             <input 
                                 type="date" 
-                                name="fechaNacimiento" 
+                                name="fecha_nacimiento" 
                                 required 
                                 onChange={manejarCambio}
-                                value={datos.fechaNacimiento}
-                                className={errores.fechaNacimiento ? "input-error" : datos.fechaNacimiento ? "input-correcto" : ""}
+                                value={datos.fecha_nacimiento}
+                                className={errores.fecha_nacimiento ? "input-error" : datos.fecha_nacimiento ? "input-correcto" : ""}
                             />
                             <label>Fecha Nacimiento</label>
-                            {!errores.fechaNacimiento && datos.fechaNacimiento && esMayorDeEdad(datos.fechaNacimiento) && (
+                            {!errores.fecha_nacimiento && datos.fecha_nacimiento && esMayorDeEdad(datos.fecha_nacimiento) && (
                                 <span className="check-correcto">✔</span>
                                 )}
-                                {errores.fechaNacimiento && (
-                                    <span className="mensaje-campo-error">{errores.fechaNacimiento}
+                                {errores.fecha_nacimiento && (
+                                    <span className="mensaje-campo-error">{errores.fecha_nacimiento}
                                     </span>
                                 )}
                         </div>

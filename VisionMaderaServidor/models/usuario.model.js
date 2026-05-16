@@ -1,32 +1,42 @@
 const { DataTypes }= require('sequelize');
 const sequelize= require('../config/db');
 const Usuario= sequelize.define("Usuario",{
-    id_usuario:{
-        type: DataTypes.INTEGER,
+    documento:{
+        type: DataTypes.STRING,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: false,
+        allowNull: false
     },
-    nombre:{
+    nombre1:{
         type: DataTypes.STRING,
         allowNull: false
     },
-    apellido:{
+    nombre2:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    apellido1:{
         type: DataTypes.STRING,
         allowNull: false
+    },
+    apellido2:{
+        type: DataTypes.STRING,
+        allowNull: true
     },
     correo:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     contrasena:{
         type: DataTypes.STRING,
         allowNull: false
     },
-    telefono:{
+    direccion:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
-    cedula:{
+    telefono:{
         type: DataTypes.STRING,
         allowNull: false
     },

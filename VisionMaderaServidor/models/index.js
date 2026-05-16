@@ -15,8 +15,8 @@ const EstadoPqrs= require('./estado_pqrs.model');
 EstadoCita.hasMany(Cita,{foreignKey: 'id_estado_cita'});
 Cita.belongsTo(EstadoCita,{foreignKey: 'id_estado_cita'});
 
-Usuario.hasMany(Cita,{foreignKey: 'id_usuario'});
-Cita.belongsTo(Usuario,{foreignKey: 'id_usuario'});
+Usuario.hasMany(Cita,{foreignKey: 'documento'});
+Cita.belongsTo(Usuario,{foreignKey: 'documento'});
 
 Disenador.hasMany(Cita,{foreignKey: 'id_disenador'});
 Cita.belongsTo(Disenador,{foreignKey: 'id_disenador'});
@@ -39,8 +39,8 @@ Pago.belongsTo(MetodoPago, { foreignKey: 'id_metodo_pago' });
 Cita.hasOne(Pago, { foreignKey: 'id_cita' });
 Pago.belongsTo(Cita, { foreignKey: 'id_cita' });
 
-Usuario.hasMany(Pqrs, {foreignKey: 'id_usuario'});
-Pqrs.belongsTo(Usuario, {foreignKey: 'id_usuario'});
+Usuario.hasMany(Pqrs, {foreignKey: 'documento'});
+Pqrs.belongsTo(Usuario, {foreignKey: 'documento'});
 
 TipoPqrs.hasMany(Pqrs, {foreignKey: 'id_tipo_pqrs'});
 Pqrs.belongsTo(TipoPqrs, {foreignKey: 'id_tipo_pqrs'});

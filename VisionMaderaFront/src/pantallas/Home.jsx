@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export default function Home() {
   const [seccionActiva, setSeccionActiva] = useState("inicio");
@@ -12,9 +12,9 @@ export default function Home() {
   const fotoPerfil =
     localStorage.getItem("fotoPerfil") ||
     "https://via.placeholder.com/80?text=Perfil";
-  const logoUrl =
+  /*const logoUrl =
     localStorage.getItem("logoUrl") ||
-    "https://via.placeholder.com/150x50?text=Logo";
+    "https://via.placeholder.com/150x50?text=Logo";*/
     
   const navigate = useNavigate();
 
@@ -47,11 +47,11 @@ export default function Home() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <img
+          {/*<img
             src={logoUrl}
             alt="Logo VisiónMadera"
             style={{ height: 40, objectFit: "contain" }}
-          />
+          />*/}
           <span style={{ fontWeight: 700, color: "#E8580A", fontSize: 18 }}>
             VisiónMadera
           </span>
@@ -79,17 +79,6 @@ export default function Home() {
             }}
           >
             Agendar cita
-          </span>
-          <span
-            onClick={() => setSeccionActiva("citas")}
-            style={{
-              cursor: "pointer",
-              fontSize: 14,
-              color: seccionActiva === "citas" ? "#E8580A" : "#555",
-              fontWeight: seccionActiva === "citas" ? 600 : 400,
-            }}
-          >
-            Mis citas
           </span>
           <span
             onClick={() => navigate("/pqrs")}

@@ -19,7 +19,7 @@ exports.getById= async(req,res)=>{
         res.status(500).json({error: err.message});
     }
 };
-exports.create= async(req,res)=>{
+/*exports.create= async(req,res)=>{
     try{
     const data= await service.create(req.body);
     res.status(201).json({
@@ -51,4 +51,4 @@ exports.delete= async(req,res)=>{
     }catch(err){
         res.status(500).json({error: err.message});
     }
-};
+};*/

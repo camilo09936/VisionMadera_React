@@ -8,7 +8,7 @@ exports.getById = async (id_estado_pago) => {
     return await EstadoPago.findByPk(id_estado_pago);
 };
 
-exports.create = async (data) => {
+/*exports.create = async (data) => {
     return await EstadoPago.create(data);
 };
 
@@ -22,4 +22,4 @@ exports.delete = async (id_estado_pago) => {
     const estadoPago = await EstadoPago.findByPk(id_estado_pago);
     if (!estadoPago) return null;
     return await estadoPago.destroy();
-};
+};*/

@@ -24,8 +24,8 @@ const PQRS= sequelize.define('PQRS', {
         allowNull: false,
         defaultValue: 1
     },
-    id_usuario:{
-        type: DataTypes.INTEGER,
+    documento:{
+        type: DataTypes.STRING,
         allowNull: false
     }
 },{

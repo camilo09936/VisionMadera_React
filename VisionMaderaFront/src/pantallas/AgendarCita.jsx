@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export default function AgendarCita() {
   const location = useLocation();
@@ -79,10 +79,19 @@ export default function AgendarCita() {
       input[type="time"]::-webkit-datetime-edit-ampm-field {
       color: #1a1a1a !important;
       }
+      input[type="date"], input[type="time"]{
+        position: relative;
+      }
       input[type="date"]::-webkit-calendar-picker-indicator,
       input[type="time"]::-webkit-calendar-picker-indicator {
       cursor: pointer;
       filter: invert(0.1);
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
+      padding: 0;
       }
       `}</style>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>

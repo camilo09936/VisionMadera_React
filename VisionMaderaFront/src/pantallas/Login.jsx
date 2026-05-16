@@ -24,7 +24,7 @@ const Login= () => { //Capturar Datos
     }, []);
 
         function obtenerUsuarios(){ //Funcion obtener usuarios
-            fetch("http://localhost:3001/usuarios")
+            fetch("http://localhost:3000/Usuarios")
             .then((response) => response.json())
             .then((data) => setUsuarios(data))
             .catch((error) => console.error("Error:", error));
@@ -58,7 +58,7 @@ const Login= () => { //Capturar Datos
                 }else{
                     localStorage.removeItem("correoUsuario");
                 }
-                localStorage.setItem("nombreUsuario",`${usuarioEncontrado.primerNombre} ${usuarioEncontrado.primerApellido}`);
+                localStorage.setItem("nombreUsuario",`${usuarioEncontrado.nombre1} ${usuarioEncontrado.apellido1}`);
                 navigate("/home");
             }else{
                 setError("Correo o contraseña incorrectos");

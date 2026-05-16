@@ -8,7 +8,7 @@ exports.getById = async (id_metodo_pago) => {
     return await MetodoPago.findByPk(id_metodo_pago);
 };
 
-exports.create = async (data) => {
+/*exports.create = async (data) => {
     return await MetodoPago.create(data);
 };
 
@@ -22,4 +22,4 @@ exports.delete = async (id_metodo_pago) => {
     const metodoPago = await MetodoPago.findByPk(id_metodo_pago);
     if (!metodoPago) return null;
     return await metodoPago.destroy();
-};
+};*/

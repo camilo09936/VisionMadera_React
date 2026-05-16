@@ -18,8 +18,8 @@ const Cita= sequelize.define('Cita',{
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    id_usuario:{
-        type: DataTypes.INTEGER,
+    documento:{
+        type: DataTypes.STRING,
         allowNull: false
     },
     id_sede:{
