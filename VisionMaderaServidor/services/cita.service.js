@@ -35,7 +35,7 @@ exports.getBloquesOcupados = async (fecha, id_disenador) => {
         // Retorna un arreglo simple limpio de números, ejemplo: [2, 4]
         return citasOcupadas.map(cita => parseInt(cita.id_bloque));
     } catch (error) {
-        console.error("Error en豪 cita.service (getBloquesOcupados):", error);
+        console.error("Error en cita.service (getBloquesOcupados):", error);
         throw error;
     }
 };
@@ -47,16 +47,16 @@ exports.create = async (citaData) => {
 
         // Usamos Cita.sequelize directo para evitar errores de importación 'undefined'
         await Cita.sequelize.query(
-            `EXEC sp_AgendarCita :fecha, :id_bloque, :id_estado_cita, :documento, :id_sede, :id_disenador`,
+            `EXEC sp_AgendarCita ?, ?, ?, ?, ?, ?`,
             {
-                replacements: { 
+                replacements: [ 
                     fecha, 
                     id_bloque, 
-                    id_estado_cita: id_estado_cita || 1, 
+                    id_estado_cita || 1, 
                     documento, 
                     id_sede, 
                     id_disenador 
-                },
+                ],
                 type: QueryTypes.RAW
             }
         );

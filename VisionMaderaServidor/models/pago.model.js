@@ -22,7 +22,8 @@ const Pago = sequelize.define('Pago', {
     },
     fecha_pago: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     },
     id_cita: {
         type: DataTypes.INTEGER,
@@ -33,5 +34,4 @@ const Pago = sequelize.define('Pago', {
     tableName: 'PAGO',
     timestamps: false
 });
-
 module.exports = Pago;

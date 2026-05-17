@@ -59,6 +59,7 @@ const Login= () => { //Capturar Datos
                     localStorage.removeItem("correoUsuario");
                 }
                 localStorage.setItem("nombreUsuario",`${usuarioEncontrado.nombre1} ${usuarioEncontrado.apellido1}`);
+                localStorage.setItem("documentoUsuario", usuarioEncontrado.documento);
                 navigate("/home");
             }else{
                 setError("Correo o contraseña incorrectos");

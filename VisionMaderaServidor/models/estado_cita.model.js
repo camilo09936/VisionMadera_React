@@ -7,7 +7,7 @@ const EstadoCita= sequelize.define('EstadoCita', {
         autoIncrement: true
     },
     nombre:{
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false,
         unique: true
     }

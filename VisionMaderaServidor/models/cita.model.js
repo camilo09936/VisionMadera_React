@@ -15,13 +15,13 @@ const Cita = sequelize.define('Cita', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-  
     id_estado_cita: {
         type: DataTypes.INTEGER,
-        allowNull: true, 
+        allowNull: false,
+        defaultValue: 1 
     },
     documento: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(20),
         allowNull: false
     },
     id_sede: {

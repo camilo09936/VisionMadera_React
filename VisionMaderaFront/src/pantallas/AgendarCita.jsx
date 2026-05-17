@@ -140,13 +140,19 @@ export default function AgendarCita() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const documentoUsuario= localStorage.getItem("documentoUsuario");
+    if (!documentoUsuario) {
+      alert("No se encontró tu sesión. Por favor vuelve a iniciar sesión.");
+      navigate("/");
+      return;
+    }
     try {
       const cuerpoPeticion = { 
         fecha: fecha, 
         id_sede: parseInt(idSede),
         id_disenador: parseInt(idDisenador),
         id_bloque: parseInt(idBloque),
-        documento: "1018235020" 
+        documento: documentoUsuario 
       };
 
       if (isEdit) {

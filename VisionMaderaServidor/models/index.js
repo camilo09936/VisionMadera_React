@@ -11,6 +11,8 @@ const Pago = require('./pago.model');
 const Pqrs = require('./pqrs.model');
 const TipoPqrs= require('./tipo_pqrs.model');
 const EstadoPqrs= require('./estado_pqrs.model');
+const BloqueHorario= require("./bloque_horario.model");
+const AgendaDiseñador= require('./agenda_disenador.model');
 
 EstadoCita.hasMany(Cita,{foreignKey: 'id_estado_cita'});
 Cita.belongsTo(EstadoCita,{foreignKey: 'id_estado_cita'});
@@ -48,6 +50,15 @@ Pqrs.belongsTo(TipoPqrs, {foreignKey: 'id_tipo_pqrs'});
 EstadoPqrs.hasMany(Pqrs, {foreignKey: 'id_estado_pqrs'});
 Pqrs.belongsTo(EstadoPqrs, {foreignKey: 'id_estado_pqrs'});
 
+BloqueHorario.hasMany(Cita, {foreignKey: 'id_bloque'});
+Cita.belongsTo(BloqueHorario, {foreignKey: "id_bloque"});
+
+BloqueHorario.hasMany(AgendaDiseñador, {foreignKey: 'id_bloque'});
+AgendaDiseñador.belongsTo(BloqueHorario, {foreignKey: 'id_bloque'});
+
+Disenador.hasMany(AgendaDiseñador, {foreignKey: 'id_disenador'});
+AgendaDiseñador.belongsTo(Disenador, {foreignKey: 'id_disenador'});
+
 module.exports = {
     sequelize,
     Usuario,
@@ -61,5 +72,7 @@ module.exports = {
     Pago,
     Pqrs,
     TipoPqrs,
-    EstadoPqrs
+    EstadoPqrs,
+    BloqueHorario,
+    AgendaDiseñador
 };
