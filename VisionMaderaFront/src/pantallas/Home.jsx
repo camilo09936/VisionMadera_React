@@ -44,6 +44,34 @@ export default function Home() {
 
     obtenerCitas();
   }, []);
+// Verificar si el token ha expirado al cargar el Home
+useEffect(() => {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+        // No hay token, redirige al login
+        navigate("/", { state: { mensaje: "Sesión expirada. Por favor inicia sesión de nuevo." } });
+        return;
+    }
+
+    // Decodifica el token para revisar su expiración
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const ahora = Math.floor(Date.now() / 1000);
+        
+        if (payload.exp < ahora) {
+            // Token expirado, limpia localStorage y redirige
+            localStorage.removeItem("token");
+            localStorage.removeItem("nombreUsuario");
+            localStorage.removeItem("documentoUsuario");
+            navigate("/", { state: { mensaje: "Sesión expirada. Por favor inicia sesión de nuevo." } });
+        }
+    } catch (error) {
+        // Token inválido
+        localStorage.clear();
+        navigate("/", { state: { mensaje: "Sesión expirada. Por favor inicia sesión de nuevo." } });
+    }
+}, []);
 
   return (
     <div
@@ -110,6 +138,8 @@ export default function Home() {
       </nav>
 
       {/* 2. SECCIÓN DE BIENVENIDA */}
+
+      
       <section
         style={{
           backgroundColor: "#FDF0E8",

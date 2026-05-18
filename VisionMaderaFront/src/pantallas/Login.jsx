@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import '../styles/Login.css';
 import LogoVM from '../assets/ResourcesLogin/LogoVisionMadera.png'
 import VerIcono from '../assets/ResourcesLogin/MostrarContrasena.png'
 import OcultarIcono from '../assets/ResourcesLogin/OcultarContrasena.png'
 
+
 const Login = () => {
     const navigate = useNavigate(); // Hook para navegar entre pantallas
+    const location = useLocation();
+    const mensajeExpiracion = location.state?.mensaje || ""; // Mensaje de expiración de sesión (si viene desde Home)
     const [usuarios, setUsuarios] = useState([]); // Lista de usuarios (ya no se usa directamente)
     const [correo, setCorreo] = useState(""); // Estado para el campo correo
     const [contrasena, setContrasena] = useState(""); // Estado para el campo contraseña
@@ -91,6 +94,7 @@ const Login = () => {
                     <h2>Login</h2>
                     {/* Muestra el mensaje de error si existe */}
                     {error && <p className="mensaje-error">{error}</p>}
+                    {mensajeExpiracion && <p className="mensaje-error">{mensajeExpiracion}</p>}
                     
                     {/* Campo de correo */}
                     <div className="campo-entrada">
