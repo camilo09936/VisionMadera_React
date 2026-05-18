@@ -19,15 +19,18 @@ exports.getById= async (req,res)=>{
         res.status(500).json({error: err.message});
     }
 };
-exports.create= async (req,res)=>{
-    try{
-        const data= await service.create(req.body);
+exports.create = async (req, res) => {
+    try {
+        const data = await service.create(req.body);
         res.status(201).json({
             mensaje: 'Usuario creado',
             data: data
         });
-    }catch(err){
-        res.status(500).json({error: err.message});
+    } catch (err) {
+        if (err.name === 'SequelizeUniqueConstraintError') {
+            return res.status(400).json({ error: 'El Usuario ya se encuentra registrado.' });
+        }
+        res.status(500).json({ error: err.message });
     }
 };
 exports.update= async (req,res)=>{

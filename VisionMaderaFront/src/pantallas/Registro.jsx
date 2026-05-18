@@ -5,7 +5,7 @@ import LogoVM from '../assets/ResourcesRegister/LogoVisionMadera.png';
 import VerIcono from '../assets/ResourcesLogin/MostrarContrasena.png';
 import OcultarIcono from '../assets/ResourcesLogin/OcultarContrasena.png';
 
-const Registro = () => { //Usa un solo estado objeto por todos los campos
+const Registro = () => { 
     const navigate = useNavigate();
     const [datos, setDatos] = useState({
         nombre1: "", nombre2: "",
@@ -61,18 +61,18 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
         return Object.keys(nuevosErrores).length===0;
     };
     
-    const manejarCambio=(e) => { //Captura name y valor del imput que se tocó y actualiza solo ese campo con ...prev sin borrar los demas
+    const manejarCambio=(e) => { 
         const {name,value}=e.target;
         setDatos(prev=>({...prev,[name]:value}));
         validarCampo(name,value);
     };
 
-    const validarEmail= (email) =>{ //Validar Formato Email
+    const validarEmail= (email) =>{ 
         const emailRegex= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
         return emailRegex.test(email);
     };
 
-    const esMayorDeEdad= (fecha) =>{ //Validacion > 18
+    const esMayorDeEdad= (fecha) =>{ 
         const hoy= new Date();
         const nacimiento= new Date(fecha);
 
@@ -89,7 +89,7 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
         return /^[0-9]{10,11}$/.test(tel);
     }
 
-    const validarDocumento= async () => { //Validar si el documento ya existe. Se llama con onblur (cuando el usuario sale del campo) y hace fetch a la api para verificar que el documento no exista
+    const validarDocumento= async () => { 
         if (!datos.documento) return;
         try{
             const respuesta= await fetch(`http://localhost:3000/Usuarios?documento=${datos.documento}`);
@@ -104,7 +104,7 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
         }
     };
 
-    const validarCampo= (name, value)=>{ //Se llama con cada tecla (Validacion tiempo real).
+    const validarCampo= (name, value)=>{ 
         let error= "";
         const camposObligatorios=["nombre1", "apellido1", "documento", 
                 "fecha_nacimiento", "telefono", "direccion", 
@@ -138,9 +138,10 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
         setErrores(prev=>({...prev,[name]:error}));
     };
 
-    const registrarUsuario= async (e) => { // Valida todo con validarFormulario(), que usa return Object.keys(nuevosErrores).length===0;  el cual determina si hay errores si todo esta bien hace feth POST enviando los datos. Antes de esto elimina confirmarContraseña
+
+    const registrarUsuario= async (e) => { 
         e.preventDefault();
-        setError(""); //Limpiar Errores Previos
+        setError(""); 
 
         if (errores.documento){
             setError("El documento ya está registrado.");
@@ -154,7 +155,7 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
             return;
         }
 
-        const {confirmarContrasena, ...datosFinales}= datos //Quitar confirmar contraseña antes de enviar a API
+        const {confirmarContrasena, ...datosFinales}= datos;
         try{
             const response= await fetch("http://localhost:3000/Usuarios",{
                 method:"POST",
@@ -162,14 +163,19 @@ const Registro = () => { //Usa un solo estado objeto por todos los campos
                 body: JSON.stringify(datosFinales)
             });
 
+            const data = await response.json();
+
             if(response.ok){
                 alert("¡Te Registraste Exitosamente!");
                 navigate("/");
             }else{
-                setError("Hubo un problema al guardar los datos.");
+               
+                setError(data.error || "Hubo un problema al guardar los datos.");
+                window.scrollTo({top: 0, behavior: "smooth"});
             }
         }catch(err){
             setError("Error al conectar con el servidor");
+            window.scrollTo({top: 0, behavior: "smooth"});
         }
     };
 
