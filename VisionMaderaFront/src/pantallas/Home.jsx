@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserIcon from '../assets/ResourcesHome/Usericon.png'
+import LogoVM from '../assets/ResourcesLogin/LogoVisionMadera.png'
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -89,17 +90,16 @@ useEffect(() => {
           justifyContent: "space-between",
           alignItems: "center",
           padding: "0 48px",
-          height: 60,
+          height: 80,
           backgroundColor: "#fff",
           borderBottom: "1px solid #eee",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontWeight: 700, color: "#E8580A", fontSize: 18 }}>
-            VisiónMadera
-          </span>
+          <div style={{ backgroundColor: "#E8580A", padding: "6px 14px", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(232, 88, 10, 0.2)"}}>
+            <img src={LogoVM} alt="VisiónMadera" style={{height: 50, objectFit: "contain"}}/>
+          </div>
         </div>
-
         <div style={{ display: "flex", gap: 28 }}>
           <span
             onClick={() => { setSeccionActiva("inicio"); navigate("/"); }}
@@ -150,7 +150,7 @@ useEffect(() => {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-         <img
+        <img
     src={UserIcon}
     alt="Foto de perfil"
     style={{
