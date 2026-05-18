@@ -105,7 +105,7 @@ const Login= () => { //Capturar Datos
                                 />
                                 Recordarme
                                 </label>
-                                <a href="#">¿Olvidaste tu contraseña?</a>
+                                <a href="#" onClick={(e)=>{e.preventDefault(); alert("Proximamente...")}}>¿Olvidaste tu contraseña?</a>
                         </div>
                         <button type="submit">Ingresar</button>
                         <div className="registro">

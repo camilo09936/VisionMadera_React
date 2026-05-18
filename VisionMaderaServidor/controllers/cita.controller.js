@@ -60,7 +60,7 @@ exports.update = async (req, res) => {
         if (!citaActualizada) return res.status(404).json({ error: "Cita no encontrada" });
         res.status(200).json(citaActualizada);
     } catch (error) {
-        res.status(500).json({ error: "Error al actualizar la cita" });
+        res.status(400).json({ error: error.message || "Error al actualizar la cita" });
     }
 };
 
@@ -71,6 +71,6 @@ exports.delete = async (req, res) => {
         if (!citaEliminada) return res.status(404).json({ error: "Cita no encontrada" });
         res.status(200).json({ mensaje: "Cita eliminada correctamente" });
     } catch (error) {
-        res.status(500).json({ error: "Error al eliminar la cita" });
+        res.status(400).json({ error: error.message || "Error al cancelar la cita" });
     }
 };
