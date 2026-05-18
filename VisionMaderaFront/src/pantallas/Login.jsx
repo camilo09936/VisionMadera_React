@@ -130,20 +130,16 @@ const Login = () => {
                             <input
                                 type="checkbox"
                                 checked={recordarme}
-                                onChange={(e) => setRecordarme(e.target.checked)}
-                            />
-                            Recordarme
-                        </label>
-                        <a href="#">¿Olvidaste tu contraseña?</a>
-                    </div>
-
-                    {/* Botón de envío del formulario */}
-                    <button type="submit">Ingresar</button>
-
-                    {/* Link para ir a la pantalla de registro */}
-                    <div className="registro">
-                        <p>¿No tienes cuenta?
-                            <span
+                                onChange={(e)=> setRecordarme(e.target.checked)}
+                                />
+                                Recordarme
+                                </label>
+                                <a href="#" onClick={(e)=>{e.preventDefault(); alert("Proximamente...")}}>¿Olvidaste tu contraseña?</a>
+                        </div>
+                        <button type="submit">Ingresar</button>
+                        <div className="registro">
+                            <p>¿No tienes cuenta? 
+                                <span 
                                 className="link-falso"
                                 onClick={() => navigate("/registro")}
                             >

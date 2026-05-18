@@ -63,9 +63,10 @@ export default function AgendarCita() {
       }
     };
 
-    cargarDisenadores();
-    setIdDisenador(""); 
-    setBloques([]);     
+    if(!idSede) return;
+    setIdDisenador("");
+    setBloques([]);
+    cargarDisenadores();     
   }, [idSede]);
 
   // 3. Cargar bloques horarios según diseñador y el día de la semana correspondiente
@@ -132,7 +133,11 @@ export default function AgendarCita() {
     if (citaEditar) {
       const fechaLimpia = citaEditar.fecha ? citaEditar.fecha.split("T")[0] : "";
       setFecha(fechaLimpia);
-      setIdSede(citaEditar.id_sede || ""); 
+      setIdSede(String(citaEditar.id_sede || ""));
+      // id_disenador e id_bloque se precargan para mostrar los valores actuales
+      // El usuario puede cambiarlos o mantenerlos al guardar
+      if(citaEditar.id_disenador) setIdDisenador(String(citaEditar.id_disenador));
+      if (citaEditar.id_bloque) setIdBloque(String(citaEditar.id_bloque)); 
       setIsEdit(true);
     }
   }, [citaEditar]);
@@ -157,11 +162,14 @@ export default function AgendarCita() {
 
       if (isEdit) {
         const response = await fetch(`${API_URL}/Cita/${citaEditar.id}`, {
-          method: "PATCH",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(cuerpoPeticion), 
         });
-        if (!response.ok) throw new Error("Error al reprogramar la cita");
+        if (!response.ok) {
+          const errorData= await response.json().catch(()=>({}));
+          throw new Error(errorData.error || errorData.detalle || "Error al reprogramar la cita");
+        }
         alert(`Cita reprogramada con éxito.`);
       } else {
         const response = await fetch(`${API_URL}/Cita`, {
@@ -169,13 +177,16 @@ export default function AgendarCita() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(cuerpoPeticion), 
         });
-        if (!response.ok) throw new Error("Error al agendar la cita en el servidor");
+        if (!response.ok) {
+          const errorData= await response.json().catch(()=>({}));
+          throw new Error(errorData.detalle || errorData.error || "Error al agendar la cita");
+        }
         alert(`Cita agendada con éxito.`);
       }
       navigate("/home");
     } catch (error) {
       console.error(error);
-      alert("No se pudo guardar la cita en la Base de Datos. Revisa la consola del backend.");
+      alert(error.message || "No se pudo guardar la cita. Intenta de nuevo.");
     }
   };
 

@@ -191,10 +191,10 @@ useEffect(() => {
             <div style={{ fontSize: 26, fontWeight: 600, color: "#E8580A" }}>{citas.length}</div>
             <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Citas activas</div>
           </div>
-          <div style={{ backgroundColor: "#fff", borderRadius: 12, padding: "16px 24px", border: "1px solid rgba(232,88,10,0.2)", textAlign: "center" }}>
+          {/*<div style={{ backgroundColor: "#fff", borderRadius: 12, padding: "16px 24px", border: "1px solid rgba(232,88,10,0.2)", textAlign: "center" }}>
             <div style={{ fontSize: 26, fontWeight: 600, color: "#E8580A" }}>{citas.length}</div>
             <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Citas realizadas</div>
-          </div>
+          </div>*/}
         </div>
       </section>
 
@@ -306,9 +306,10 @@ useEffect(() => {
               1: "8:00 - 10:00",
               2: "10:00 - 12:00",
               3: "12:00 - 14:00",
-              4: "14:00 - 16:00"
+              4: "14:00 - 16:00",
+              5: "16:00 - 18:00",
+              6: "18:00 - 20:00"
             };
-            
             const nombreSedeReal = nombresSedes[cita.id_sede] || `Sede (ID: ${cita.id_sede})`;
             const horaReal = horasBloques[cita.id_bloque] || "Horario por confirmar";
 

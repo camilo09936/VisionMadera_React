@@ -3,330 +3,160 @@ import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-export default function ReprogramarCita() {
+const formatearHora= (hora)=>{
+  if (!hora) return "--:--";
+  const str= String(hora);
+  if(str.includes("T")){
+    return str.split("T")[1].substring(0, 5);
+  }
+  return str.substring(0, 5);
+};
+
+export default function ReprogramarCita(){
   const [citas, setCitas] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
-  const [fecha, setFecha] = useState("");
-  const [hora, setHora] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const navigate = useNavigate();
+  const [sedes, setSedes] = useState([]);
+  const [disenadores, setDisenadores] = useState([]);
+  const [bloques, setBloques] = useState([]);
+  const [mostrarModalError, setMostrarModalError] = useState(false);
+  const [mensajeModal, setMensajeModal] = useState("");
+  const navigate= useNavigate();
 
-  useEffect(() => {
-    fetch(`${API_URL}/citas`)
-      .then((response) => response.json())
-      .then((data) => setCitas(data))
-      .catch((error) => console.error("Error cargando citas:", error));
-  }, []); //Trae todas las citas al cargar
+  useEffect(()=>{
+    const cargarDatos= async()=>{
+      try{
+        const [resCitas, resSedes, resDisenadores, resBloques]= await Promise.all([
+          fetch(`${API_URL}/Cita`),
+          fetch(`${API_URL}/Sede`),
+          fetch(`${API_URL}/Disenador`),
+          fetch(`${API_URL}/BloqueHorario`),
+        ]);
 
-  useEffect(() => {
-    const cita = citas.find((item) => item.id === selectedId);
-    if (cita) {
-      setFecha(cita.fecha);
-      setHora(cita.hora);
-      setDescripcion(cita.descripcion || "");
-    }
-  }, [selectedId, citas]); //Se dispara cada que el usuario elija una cita diferente en el select. Busca este objeto con .find() y prellena los campos.
+        const dataCitas= await resCitas.json();
+        const dataSedes= await resSedes.json();
+        const dataDisenadores= await resDisenadores.json();
+        const dataBloques= await resBloques.json();
 
-  const selectedCita = citas.find((item) => item.id.toString() === selectedId);
+        setCitas(Array.isArray(dataCitas) ? dataCitas : dataCitas.data||[]);
+        setSedes(Array.isArray(dataSedes) ? dataSedes : dataSedes.data||[]);
+        setDisenadores(Array.isArray(dataDisenadores) ? dataDisenadores : dataDisenadores.data||[]);
+        setBloques(Array.isArray(dataBloques) ? dataBloques : dataBloques.data||[]);
+      }catch (error){
+        console.error("Error cargando datos:", error);
+        setMensajeModal("No se pudieron cargar las citas.");
+        setMostrarModalError(true);
+      }
+    };
+    cargarDatos();
+  }, []);
 
-  const handleSubmit = async (e) => {
-    //Hace PATCH para guardar nuevos datos. luego actualiza el array en pantalla con .map() sin necesidad de volver a llamar la API
-    e.preventDefault();
-    if (!selectedId) {
-      alert("Selecciona primero una cita para reprogramar.");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/citas/${selectedId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fecha, hora, descripcion }),
-      });
-      if (!response.ok) throw new Error("Error al reprogramar la cita");
-      alert(`Cita reprogramada para ${fecha} a las ${hora}.`);
-      setCitas((prev) =>
-        prev.map(
-          (cita) =>
-            cita.id === selectedId
-              ? { ...cita, fecha, hora, descripcion }
-              : cita, //aca lo anterior
-        ),
-      );
-    } catch (error) {
-      console.error(error);
-      alert("No se pudo reprogramar la cita. Intenta de nuevo.");
-    }
+  const handleReprogramar= (cita)=>{
+    navigate("/agendar-cita", {
+      state: {
+        cita: {
+          id: cita.id_cita,
+          fecha: cita.fecha,
+          id_sede: cita.id_sede,
+          id_disenador: cita.id_disenador,
+          id_bloque: cita.id_bloque,
+        }
+      }
+    });
   };
 
   return (
-    <div
-      style={{
-        fontFamily: "Poppins, sans-serif",
-        backgroundColor: "#FFF5EE",
-        minHeight: "100vh",
-        padding: "30px 20px",
-      }}
-    >
-      <style>{`
-      input::placeholder,
-      textarea::placeholder,
-      select {
-      color: #9b9b9b;
-      opacity: 1;
-      }
-      input[type="date"]::-webkit-datetime-edit,
-      input[type="date"]::-webkit-datetime-edit-fields-wrapper,
-      input[type="date"]::-webkit-datetime-edit-text,
-      input[type="date"]::-webkit-datetime-edit-month-field,
-      input[type="date"]::-webkit-datetime-edit-day-field,
-      input[type="date"]::-webkit-datetime-edit-year-field,
-      input[type="time"]::-webkit-datetime-edit,
-      input[type="time"]::-webkit-datetime-edit-fields-wrapper,
-      input[type="time"]::-webkit-datetime-edit-text,
-      input[type="time"]::-webkit-datetime-edit-hour-field,
-      input[type="time"]::-webkit-datetime-edit-minute-field,
-      input[type="time"]::-webkit-datetime-edit-ampm-field {
-        color: #333;
-        }
-        `}</style>
-        <div style={{ maxWidth: "520px", margin: "0 auto" }}>
-          <h1
-          style={{
-            color: "#E8580A",
-            textAlign: "center",
-            marginBottom: "6px",
-            fontSize: "30px",
-          }}
-        >
+    <div style={{ fontFamily: "Poppins, sans-serif", backgroundColor: "#FAFAF9", minHeight: "100vh", padding: "40px 20px" }}>
+      {/* Encabezado */}
+      <div style={{textAlign: "center", marginBottom: "40px"}}>
+        <h1 style={{color: "#E8580A", fontSize: "32px", fontWeight: "700", marginBottom: "8px"}}>
           🔄 Reprogramar Cita
         </h1>
-        <p
-          style={{
-            color: "#6d6d6d",
-            textAlign: "center",
-            marginBottom: "18px",
-          }}
-        >
-          Elige la cita y actualiza fecha, hora y descripción con estilo.
-        </p>
+        <p style={{color: "#666", fontSize: 14}}>Selecciona la cita que deseas reprogramar</p>
         <button
-          type="button"
-          onClick={() => navigate("/home")}
+          onClick={()=>navigate("/home")}
           style={{
-            display: "block",
-            margin: "0 auto 26px",
-            padding: "10px 18px",
-            borderRadius: "999px",
-            border: "1px solid #E8580A",
-            backgroundColor: "#ffffff",
-            color: "#E8580A",
-            fontWeight: 700,
-            cursor: "pointer",
-            transition: "all 0.2s",
+            marginTop: "18px", padding: "12px 22px", backgroundColor: "#fff", color: "#333",
+            border: "1px solid #E8580A", borderRadius: "999px", cursor: "pointer",
+            fontSize: "14px", fontWeight: 600, display: "inline-flex", alignItems: "center",
+            gap: "8px", transition: "all 0.2s",
           }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = "#E8580A";
-            e.target.style.color = "#fff";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "#ffffff";
-            e.target.style.color = "#333";
-          }}
-        >
-          ← Volver al inicio
-        </button>
+          onMouseEnter={(e)=>{e.target.style.backgroundColor="#E8580A"; e.target.style.color= "#fff";}}
+          onMouseLeave={(e)=>{e.target.style.backgroundColor="#fff"; e.target.style.color= "#333"}}
+          >
+            ← Volver al inicio
+          </button>
       </div>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          maxWidth: "520px",
-          margin: "0 auto",
-          backgroundColor: "#ffffff",
-          padding: "28px",
-          borderRadius: "20px",
-          boxShadow: "0 24px 60px rgba(228, 120, 60, 0.12)",
-          border: "1px solid rgba(232, 88, 10, 0.14)",
-        }}
-      >
-        <div style={{ marginBottom: "20px" }}>
-          <label
-            htmlFor="select-cita"
-            style={{
-              display: "block",
-              marginBottom: "10px",
-              fontWeight: "700",
-              color: "#333",
-            }}
-          >
-            📌 Selecciona la cita a reprogramar
-          </label>
-          <select
-            id="select-cita"
-            value={selectedId}
-            onChange={(e) => setSelectedId(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              padding: "14px 16px",
-              border: "2px solid #E8E8E8",
-              borderRadius: "16px",
-              backgroundColor: "#f5f3f1",
-              fontSize: "14px",
-              boxSizing: "border-box",
-            }}
-          >
-            <option value="">Selecciona una cita</option>
-            {citas.map((cita) => (
-              <option key={cita.id} value={cita.id}>
-                {cita.fecha} {cita.hora} -{" "}
-                {cita.descripcion || "Sin descripción"}
-              </option>
-            ))}
-          </select>
+      {/* Tabla */}
+      <div style={{ backgroundColor: "#fff", borderRadius: "12px", padding: "32px", maxWidth: "1000px", margin: "0 auto", boxShadow: "0 4px 20px rgba(0,0,0,0.05)", border: "1px solid #eee" }}>
+        <table style={{width: "100%", borderCollapse: "collapse", textAlign: "left"}}>
+          <thead>
+            <tr style={{borderBottom: "2px solid #E8580A"}}>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Fecha</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Hora</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Descripción</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Sede</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600" }}>Diseñador</th>
+              <th style={{ padding: "12px 8px", color: "#1a1a1a", fontWeight: "600", textAlign: "center" }}>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {citas.length===0?(
+              <tr>
+                <td colSpan="6" style={{textAlign: "center", color: "#888", padding: "40px 0", fontSize: "14px"}}>
+                  No hay citas registradas 📅
+                </td>
+              </tr>
+            ) : (
+              citas.map((cita)=>{
+                const idCitaReal= cita.id_cita || cita.id;
+                const sede= sedes.find(s=> s.id_sede==cita.id_sede);
+                const disenador= disenadores.find(d=>d.id_disenador==cita.id_disenador);
+                const bloque= bloques.find(b=>b.id_bloque==cita.id_bloque);
+
+                const sedeTexto= sede ? sede.nombre: `Sede (ID: ${cita.id_sede})`;
+                const disenadorTexto= disenador ? `${disenador.nombre} ${disenador.apellido}` : `Diseñador (ID: ${cita.id_disenador})`;
+                const horaTexto= bloque ? `${formatearHora(bloque.hora_inicio)} - ${formatearHora(bloque.hora_fin)}` : "Por confirmar";
+
+                return (
+                  <tr key={idCitaReal} style={{borderBottom: "1px solid #f5f5f5"}}>
+                    <td style={{padding: "16px 8px", fontSize: "14px", color: "#333"}}>
+                      {cita.fecha?String(cita.fecha).split("T")[0]:"—"}
+                    </td>
+                    <td style={{padding: "16px 8px", fontSize: "14px", color: "#333"}}>{horaTexto}</td>
+                    <td style={{padding: "16px 8px", fontSize: "14px", color: "#555"}}>Cita de Diseño Especializado</td>
+                    <td style={{padding: "16px 8px", fontSize: "14px", color: "#333"}}>{sedeTexto}</td>
+                    <td style={{padding: "16px 8px", fontSize: "14px", color: "#333"}}>{disenadorTexto}</td>
+                    <td style={{padding: "16px 8px", textAlign: "center"}}>
+                      <button
+                      onClick={()=>handleReprogramar(cita)}
+                      style={{
+                        backgroundColor: "#E8580A", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 16px", fontSize: "13px", fontWeight: "500", cursor: "pointer", transition: "background-color 0.2s" }}
+                      onMouseEnter={(e)=>e.target.style.backgroundColor= "#c64604"}
+                      onMouseLeave={(e)=>e.target.style.backgroundColor= "#E8580A"}
+                      >
+                        Reprogramar
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Modal error */}
+      {mostrarModalError && (
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000 }}>
+          <div style={{ backgroundColor: "#fff", padding: "24px 32px", borderRadius: "16px", maxWidth: "400px", width: "90%", boxShadow: "0 10px 25px rgba(0,0,0,0.15)" }}>
+            <p style={{color: "#333", fontSize: "15px", marginBottom: "24px", lineHeight: "1.5"}}>{mensajeModal}</p>
+            <div style={{display: "flex", justifyContent: "flex-end"}}>
+              <button onClick={()=>setMostrarModalError(false)} style={{backgroundColor: "transparent", color: "#E8580A", border: "none", fontSize: "14px", fontWeight: "600", cursor: "pointer"}}>
+                Cerrar
+              </button>
+            </div>
+          </div>
         </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label
-            htmlFor="fecha"
-            style={{
-              display: "block",
-              marginBottom: "10px",
-              fontWeight: "700",
-              color: "#333",
-            }}
-          >
-            📆 Nueva fecha
-          </label>
-          <input
-            type="date"
-            id="fecha"
-            value={fecha}
-            onChange={(e) => setFecha(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              padding: "14px 16px",
-              border: "2px solid #E8E8E8",
-              borderRadius: "16px",
-              backgroundColor: "#f8f4f1",
-              boxSizing: "border-box",
-              fontSize: "14px",
-              minHeight: "50px",
-              transition: "all 0.25s",
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = "#E8580A";
-              e.target.style.backgroundColor = "#fff";
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = "#E8E8E8";
-              e.target.style.backgroundColor = "#f8f4f1";
-            }}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label
-            htmlFor="hora"
-            style={{
-              display: "block",
-              marginBottom: "10px",
-              fontWeight: "700",
-              color: "#333",
-            }}
-          >
-            ⏰ Nueva hora
-          </label>
-          <input
-            type="time"
-            id="hora"
-            value={hora}
-            onChange={(e) => setHora(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              padding: "14px 16px",
-              border: "2px solid #E8E8E8",
-              borderRadius: "16px",
-              backgroundColor: "#f8f4f1",
-              boxSizing: "border-box",
-              fontSize: "14px",
-              minHeight: "50px",
-              transition: "all 0.25s",
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = "#E8580A";
-              e.target.style.backgroundColor = "#fff";
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = "#E8E8E8";
-              e.target.style.backgroundColor = "#f8f4f1";
-            }}
-          />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label
-            htmlFor="descripcion"
-            style={{
-              display: "block",
-              marginBottom: "10px",
-              fontWeight: "700",
-              color: "#333",
-            }}
-          >
-            📝 Descripción
-          </label>
-          <textarea
-            id="descripcion"
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-            rows="5"
-            placeholder="Describe brevemente qué deseas reprogramar"
-            style={{
-              width: "100%",
-              padding: "14px 16px",
-              border: "2px solid #E8E8E8",
-              borderRadius: "16px",
-              backgroundColor: "#f8f4f1",
-              fontSize: "14px",
-              color: "#1a1a1a",
-              boxSizing: "border-box",
-              minHeight: "120px",
-              transition: "all 0.25s",
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = "#E8580A";
-              e.target.style.backgroundColor = "#fff";
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = "#E8E8E8";
-              e.target.style.backgroundColor = "#f8f4f1";
-            }}
-          />
-        </div>
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "14px",
-            backgroundColor: "#E8580A",
-            color: "#fff",
-            border: "none",
-            borderRadius: "16px",
-            cursor: "pointer",
-            fontWeight: "700",
-            fontSize: "15px",
-            transition: "all 0.25s",
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = "#d15e0c";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "#E8580A";
-          }}
-        >
-          Reprogramar Cita
-        </button>
-      </form>
-    </div>
+        )}
+  </div>
   );
 }
