@@ -67,8 +67,19 @@ export default function Pqrs() {
 
   return (
     <div style={{ fontFamily: "Poppins, sans-serif", padding: "48px", backgroundColor: "#FAFAF9", minHeight: "100vh" }}>
+      <button
+  onClick={() => navigate("/home")}
+  style={{
+    marginTop: "18px", padding: "12px 22px", backgroundColor: "#fff", color: "#333", border: "1px solid #E8580A", borderRadius: "999px", cursor: "pointer", fontSize: "14px", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: "8px", transition: "all 0.2s",
+  }}
+  onMouseEnter={(e) => { e.target.style.backgroundColor = "#E8580A"; e.target.style.color = "#fff"; }}
+  onMouseLeave={(e) => { e.target.style.backgroundColor = "#fff"; e.target.style.color = "#333"; }}
+>
+  ← Volver al inicio
+</button>
+<form onSubmit={handleSubmit}></form>
       <div style={{ maxWidth: "600px", margin: "0 auto", backgroundColor: "#fff", padding: "30px", borderRadius: "12px", border: "1px solid #eee", boxShadow: "0 4px 10px rgba(0,0,0,0.05)" }}>
-        <h2 style={{ color: "#E8580A", marginBottom: "20px" }}>Nueva PQRS</h2>
+      <h2 style={{ color: "#E8580A", marginBottom: "20px" }}>Nueva PQRS</h2>
         
         <form onSubmit={handleSubmit}>
           {/* SELECTOR DE TIPO */}

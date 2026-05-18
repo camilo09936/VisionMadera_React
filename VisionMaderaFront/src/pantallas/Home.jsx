@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UserIcon from '../assets/ResourcesHome/Usericon.png'
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -119,17 +120,17 @@ export default function Home() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <img
-            src={fotoPerfil}
-            alt="Foto de perfil"
-            style={{
-              width: 80,
-              height: 80,
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "3px solid #E8580A",
-            }}
-          />
+         <img
+    src={UserIcon}
+    alt="Foto de perfil"
+    style={{
+        width: 80,
+        height: 80,
+        borderRadius: "50%",
+        objectFit: "cover",
+        border: "3px solid #E8580A",
+    }}
+/>
           <div>
             <h1 style={{ fontSize: 26, fontWeight: 600, marginBottom: 8, color: "#1a1a1a" }}>
               Hola, {nombreUsuario}

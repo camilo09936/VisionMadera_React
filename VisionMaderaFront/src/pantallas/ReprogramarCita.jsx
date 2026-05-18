@@ -131,10 +131,10 @@ export default function ReprogramarCita() {
           }}
           onMouseLeave={(e) => {
             e.target.style.backgroundColor = "#ffffff";
-            e.target.style.color = "#E8580A";
+            e.target.style.color = "#333";
           }}
         >
-          ← Volver al Home
+          ← Volver al inicio
         </button>
       </div>
       <form

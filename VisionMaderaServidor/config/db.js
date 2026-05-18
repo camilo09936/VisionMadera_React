@@ -8,7 +8,7 @@ if(DB_TYPE==='mysql'){
     });
 }
 if (DB_TYPE === "mssql") {
-    sequelize = new Sequelize('VisionMadera','sa','1001015565Sc.',{
+    sequelize = new Sequelize('VisionMadera','sa','Password123!',{
         host: 'localhost',
         port: 1433,
         dialect: 'mssql',

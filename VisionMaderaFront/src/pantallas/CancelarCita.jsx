@@ -91,27 +91,15 @@ export default function CancelarCita() {
     >
       {/* BOTÓN VOLVER */}
       <button
-        onClick={() => navigate("/home")}
-        style={{
-          position: "absolute",
-          top: "30px",
-          left: "30px",
-          backgroundColor: "#fff",
-          border: "1px solid #ccc",
-          borderRadius: "50%",
-          width: "45px",
-          height: "45px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-          fontWeight: "bold",
-          fontSize: "14px"
-        }}
-      >
-        ⬅
-      </button>
+  onClick={() => navigate("/home")}
+  style={{
+    marginTop: "18px", padding: "12px 22px", backgroundColor: "#fff", color: "#333", border: "1px solid #E8580A", borderRadius: "999px", cursor: "pointer", fontSize: "14px", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: "8px", transition: "all 0.2s",
+  }}
+  onMouseEnter={(e) => { e.target.style.backgroundColor = "#E8580A"; e.target.style.color = "#fff"; }}
+  onMouseLeave={(e) => { e.target.style.backgroundColor = "#fff"; e.target.style.color = "#333"; }}
+>
+  ← Volver al inicio
+</button>
 
       {/* TÍTULO */}
       <h1
