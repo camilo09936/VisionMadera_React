@@ -25,7 +25,7 @@ export default function ReprogramarCita(){
     const cargarDatos= async()=>{
       try{
         const [resCitas, resSedes, resDisenadores, resBloques]= await Promise.all([
-          fetch(`${API_URL}/Cita`),
+          fetch(`${API_URL}/Cita`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }}),
           fetch(`${API_URL}/Sede`),
           fetch(`${API_URL}/Disenador`),
           fetch(`${API_URL}/BloqueHorario`),

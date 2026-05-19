@@ -12,6 +12,7 @@ if (DB_TYPE === "mssql") {
         host: 'localhost',
         port: 1433,
         dialect: 'mssql',
+        timezone: '-05:00',
         dialectOptions:{
             options:{
                 encrypt: false,

@@ -3,17 +3,20 @@ const citaService = require('../services/cita.service');
 // Obtener todas las citas
 exports.getAll = async (req, res) => {
     try {
-        const citas = await citaService.getAll();
+        const documentoUsuario= req.usuario.documento;
+        const citas = await citaService.getAllByDocumento(documentoUsuario);
         res.status(200).json(citas);
     } catch (error) {
-        res.status(500).json({ error: "Error al obtener las citas" });
+        console.error("Error en getAll controller:", error);
+        res.status(500).json({ error: "Error al obtener tus citas" });
     }
 };
 
 // Obtener cita por ID
 exports.getById = async (req, res) => {
     try {
-        const cita = await citaService.getById(req.params.id);
+        const { id_cita }= req.params;
+        const cita = await citaService.getById(id_cita);
         if (!cita) return res.status(404).json({ error: "Cita no encontrada" });
         res.status(200).json(cita);
     } catch (error) {
@@ -43,7 +46,11 @@ exports.getBloquesOcupados = async (req, res) => {
 // Crear una nueva cita
 exports.create = async (req, res) => {
     try {
-        const nuevaCita = await citaService.create(req.body);
+        const citaData={
+            ...req.body,
+            documento: req.usuario.documento
+        };
+        const nuevaCita = await citaService.create(citaData);
         res.status(201).json(nuevaCita);
     } catch (error) {
         res.status(400).json({ 
@@ -56,7 +63,8 @@ exports.create = async (req, res) => {
 // Actualizar una cita
 exports.update = async (req, res) => {
     try {
-        const citaActualizada = await citaService.update(req.params.id, req.body);
+        const { id_cita }= req.params;
+        const citaActualizada = await citaService.update(id_cita, req.body);
         if (!citaActualizada) return res.status(404).json({ error: "Cita no encontrada" });
         res.status(200).json(citaActualizada);
     } catch (error) {
@@ -67,7 +75,8 @@ exports.update = async (req, res) => {
 // Eliminar una cita
 exports.delete = async (req, res) => {
     try {
-        const citaEliminada = await citaService.delete(req.params.id);
+        const { id_cita }= req.params;
+        const citaEliminada = await citaService.delete(id_cita);
         if (!citaEliminada) return res.status(404).json({ error: "Cita no encontrada" });
         res.status(200).json({ mensaje: "Cita eliminada correctamente" });
     } catch (error) {

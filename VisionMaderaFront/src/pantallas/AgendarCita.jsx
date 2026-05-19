@@ -112,7 +112,13 @@ export default function AgendarCita() {
         return;
       }
       try {
-        const response = await fetch(`${API_URL}/Cita/ocupados?fecha=${fecha}&id_disenador=${idDisenador}`);
+        const token= localStorage.getItem("token");
+        const response = await fetch(`${API_URL}/Cita/ocupados?fecha=${fecha}&id_disenador=${idDisenador}`,{
+          method: "GET",
+          headers: {
+            "Authorization": token ? `Bearer ${token}` : ""
+          }
+        });
         if (response.ok) {
           const data = await response.json();
           setBloquesOcupados(Array.isArray(data) ? data : []);
@@ -145,6 +151,7 @@ export default function AgendarCita() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const token=  localStorage.getItem("token");
     const documentoUsuario= localStorage.getItem("documentoUsuario");
     if (!documentoUsuario) {
       alert("No se encontró tu sesión. Por favor vuelve a iniciar sesión.");
@@ -161,9 +168,13 @@ export default function AgendarCita() {
       };
 
       if (isEdit) {
-        const response = await fetch(`${API_URL}/Cita/${citaEditar.id}`, {
+        const idParaEditar= citaEditar.id_cita||citaEditar.id;
+        const response = await fetch(`${API_URL}/Cita/${idParaEditar}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` 
+          },
           body: JSON.stringify(cuerpoPeticion), 
         });
         if (!response.ok) {
@@ -174,7 +185,10 @@ export default function AgendarCita() {
       } else {
         const response = await fetch(`${API_URL}/Cita`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` 
+          },
           body: JSON.stringify(cuerpoPeticion), 
         });
         if (!response.ok) {

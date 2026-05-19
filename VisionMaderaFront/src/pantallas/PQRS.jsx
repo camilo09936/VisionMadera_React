@@ -27,7 +27,7 @@ export default function Pqrs() {
       .catch(err => console.error("Error tipos:", err));
 
     // 2. Cargar las citas del usuario
-    fetch(`${API_URL}/Cita`)
+    fetch(`${API_URL}/Cita`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }})
     .then(res => res.json())
     .then(data=>setCitas(Array.isArray(data)?data:data.data||[]))
     .catch(err => console.error("Error citas:", err));

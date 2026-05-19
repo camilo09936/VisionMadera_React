@@ -1,5 +1,5 @@
 const Cita = require('../models/cita.model');
-const { QueryTypes } = require('sequelize');
+const { QueryTypes, where } = require('sequelize');
 
 const BLOQUES={
     1: {inicio:8,  fin:10},
@@ -13,14 +13,34 @@ const BLOQUES={
 function construirFechaHoraCita(fecha, id_bloque){
     const bloque= BLOQUES[parseInt(id_bloque)];
     if (!bloque) return null;
-    const [year, month, day]= fecha.split('-').map(Number);
+    let fechaString = "";
+    if (fecha instanceof Date){
+        fechaString= fecha.toISOString().split('T')[0];
+    }else{
+        fechaString= String(fecha).split('T')[0];
+    }
+    const [year, month, day]= fechaString.split('-').map(Number);
     return new Date(year, month - 1, day, bloque.inicio,0,0);
 }
 
 // Obtener todas las citas
-exports.getAll = async () => {
+exports.getAllByDocumento = async (documentoUsuario) => {
     try {
-        return await Cita.findAll();
+        const citas= await Cita.findAll({ 
+            where: {documento: documentoUsuario},
+            raw: true
+        });
+        return citas.map(c=>({
+            ...c,
+            fecha: (()=>{
+                const raw= c.fecha instanceof Date
+                ? `${c.fecha.getUTCFullYear()}-${String(c.fecha.getUTCMonth()+1).padStart(2,'0')}-${String(c.fecha.getUTCDate()).padStart(2,'0')}`
+                : String(c.fecha).split('T')[0];
+                const [y, m, d]= raw.split("-").map(Number);
+                const corregida= new Date(y, m-1, d+1);
+                return `${corregida.getFullYear()}-${String(corregida.getMonth()+1).padStart(2,'0')}-${String(corregida.getDate()).padStart(2,'0')}`;
+        })()
+    }));
     } catch (error) {
         console.error("Error en cita.service (getAll):", error);
         throw error;
@@ -56,14 +76,13 @@ exports.getBloquesOcupados = async (fecha, id_disenador) => {
 exports.create = async (citaData) => {
     try {
         const { fecha, id_bloque, id_estado_cita, documento, id_sede, id_disenador } = citaData;
-
         const bloque= BLOQUES[parseInt(id_bloque)];
         if (!bloque) throw new Error("El bloque horario seleccionado no es válido.");
 
         //REGLA DE NEGOCIO 1: No se pueden agendar citas en el pasado
         const fechaHoraCita= construirFechaHoraCita(fecha, id_bloque);
         const ahora= new Date();
-        if (fechaHoraCita<=ahora){
+        if (fechaHoraCita.getTime()<=ahora.getTime()){
             throw new Error("No se puede agendar una cita en una fecha y hora que ya paso.");
         }
 
@@ -72,10 +91,11 @@ exports.create = async (citaData) => {
             throw new Error("No se pueden agendar citas después de las 20:00");
         }
         // Usamos Cita.sequelize directo para evitar errores de importación 'undefined'
+        const fechaSegura= String(fecha).split('T')[0];
         await Cita.sequelize.query(
-            `EXEC sp_AgendarCita ?, ?, ?, ?, ?, ?`,
+            `EXEC sp_AgendarCita '${fechaSegura}', ?, ?, ?, ?, ?`,
             {
-                replacements: [ fecha, id_bloque, id_estado_cita || 1, documento, id_sede, id_disenador],
+                replacements: [id_bloque, id_estado_cita || 1, documento, id_sede, id_disenador],
                 type: QueryTypes.RAW
             }
         );
@@ -94,37 +114,33 @@ exports.update = async (id_cita, citaData) => {
         const cita = await Cita.findByPk(id_cita);
         if (!cita) return null;
 
-        //REGLA DE NEGOCIO 1: No se puede reprogramar con menos de 2 horas de anticipacion.
-        const fechaHoraActual= construirFechaHoraCita(
-            cita.fecha instanceof Date
-            ? cita.fecha.toISOString().split('T')[0]
-            : String(cita.fecha).split("T")[0],
-        cita.id_bloque
-        );
+        const fechaHoraActualCita= construirFechaHoraCita(cita.fecha, cita.id_bloque);
         const ahora= new Date();
         const dosHorasEnMs= 2 * 60 * 60 * 1000;
-        if (fechaHoraActual - ahora < dosHorasEnMs){
-            throw new Error("No se puede reprogramar una cita con menos de 2 horas de anticipación.");
-        }
-        const nuevaFecha= citaData.fecha || cita.fecha;
-        const nuevoBloque= citaData.id_bloque || cita.id_bloque;
 
+        //REGLA DE NEGOCIO 1: No se puede reprogramar con menos de 2 horas de anticipacion ni citas que ya pasaron.
+        if (fechaHoraActualCita.getTime() - ahora.getTime() < dosHorasEnMs){
+            throw new Error("No se puede reprogramar una cita con menos de 2 horas de anticipación ni citas que ya pasaron.");
+        }
+        const nuevaFecha= citaData.fecha||cita.fecha;
+        const nuevoBloque= citaData.id_bloque||cita.id_bloque;
         const bloque= BLOQUES[parseInt(nuevoBloque)];
-        if(!bloque) throw new Error("El bloque horario nuevo no es válido");
+        if(!bloque) throw new Error("El bloque de horario nuevo no es válido");
 
         //REGLA DE NEGOCIO 2: La nueva fecha/ hora no puede ser en el pasado
-        const nuevaFechaHora= construirFechaHoraCita(
-            typeof nuevaFecha==='string' ? nuevaFecha.split('T')[0] : nuevaFecha,
-            nuevoBloque
-        );
-        if(nuevaFechaHora<=ahora){
+        const nuevaFechaHora= construirFechaHoraCita(nuevaFecha, nuevoBloque);
+        if(nuevaFechaHora.getTime()<=ahora.getTime()){
             throw new Error("No se puede reprogramar a una fecha y hora que ya pasaron.");
         }
         //REGLA DE NEGOCIO 3: No reagender luego de las 20:00
         if (bloque.inicio>=20){
             throw new Error("No se puede reprogramar citas a un horario después de las 20:00.");
         }
-        await cita.update(citaData);
+        const citaSegura={
+            ...citaData,
+            fecha: citaData.fecha?String(citaData.fecha).split('T')[0]: cita.fecha
+        };
+        await cita.update(citaSegura);
         return cita;
     } catch (error) {
         console.error("Error en cita.service (update):", error.message);
@@ -138,17 +154,13 @@ exports.delete = async (id_cita) => {
         const cita = await Cita.findByPk(id_cita);
         if (!cita) return null;
 
-        //REGLA DE NEGOCIO 1: No se puede cancelar una cita con menos de 2 horas de anticipacion
-        const fechaHoraCita= construirFechaHoraCita(
-            cita.fecha instanceof Date
-            ? cita.fecha.toISOString().split('T')[0]
-            : String(cita.fecha).split('T')[0],
-        cita.id_bloque
-        );
+        const fechaHoraCita= construirFechaHoraCita(cita.fecha, cita.id_bloque);
         const ahora= new Date();
         const dosHorasEnMs= 2 * 60 * 60 * 1000;
-        if (fechaHoraCita - ahora < dosHorasEnMs){
-            throw new Error("No se puede cancelar una cita con menos de 2 horas de anticipación");
+
+        //REGLA DE NEGOCIO 1: No se puede cancelar una cita con menos de 2 horas de anticipacion ni citas que ya pasaron.
+        if(fechaHoraCita.getTime() - ahora.getTime() < dosHorasEnMs){
+            throw new Error("No se puede cancelar una cita con menos de 2 horas de anticipación ni citas que ya pasaron.");
         }
         await cita.destroy();
         return cita;

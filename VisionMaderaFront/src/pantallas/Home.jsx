@@ -9,8 +9,10 @@ export default function Home() {
   const [seccionActiva, setSeccionActiva] = useState("inicio");
   const [cardHover, setCardHover] = useState(null);
   const [citas, setCitas] = useState([]);
+  const [sedes, setSedes] = useState([]);
+  const [bloques, setBloques] = useState([]);
   
-  const nombreUsuario = localStorage.getItem("nombreUsuario") || "JUAN MORALES";
+  const nombreUsuario = localStorage.getItem("nombreUsuario");
   const fotoPerfil =
     localStorage.getItem("fotoPerfil") ||
     "https://via.placeholder.com/80?text=Perfil";
@@ -21,7 +23,8 @@ export default function Home() {
   useEffect(() => {
     const obtenerCitas = async () => {
       try {
-        const response = await fetch(`${API_URL}/Cita`);
+        const token= localStorage.getItem("token");
+        const response = await fetch(`${API_URL}/Cita`, { headers: { "Authorization": `Bearer ${token}` }});
         
         if (!response.ok) {
           throw new Error(`Error en el servidor: ${response.status}`);
@@ -44,6 +47,14 @@ export default function Home() {
     };
 
     obtenerCitas();
+    // Cargar sedes y bloques para mostrar en lista de citas
+    Promise.all([
+      fetch(`${API_URL}/Sede`).then(r=>r.json()),
+      fetch(`${API_URL}/BloqueHorario`).then(r=>r.json()),
+    ]).then(([dataSedes, dataBloques])=>{
+      setSedes(Array.isArray(dataSedes)?dataSedes:dataSedes.data||[]);
+      setBloques(Array.isArray(dataBloques)?dataBloques:dataBloques.data||[]);
+    }).catch(err=>console.error("Error cargando catálogos:", err));
   }, []);
 // Verificar si el token ha expirado al cargar el Home
 useEffect(() => {
@@ -279,39 +290,19 @@ useEffect(() => {
           <p style={{ color: "#888", fontSize: 14 }}>No tienes citas agendadas 📅</p>
         ) : (
           citas.map((cita) => {
-            // Extracción segura del día del campo DATEONLY ('YYYY-MM-DD')
-            const partesFecha = cita.fecha ? cita.fecha.split("-") : ["0000", "00", "00"];
-            const diaNum = partesFecha[2] || "00";
-            
-            // Generar el nombre de mes abreviado seguro
-            let nombreMes = "MES";
-            if (cita.fecha) {
-              const dateObj = new Date(cita.fecha + "T00:00:00");
-              if (!isNaN(dateObj.getTime())) {
-                nombreMes = dateObj.toLocaleString("es-ES", { month: "short" }).toUpperCase().replace(".", "");
-              }
-            }
+            const fechaSolo= cita.fecha?String(cita.fecha).split("T")[0] : "0000-00-00";
+            const [, mesStr, diaStr]= fechaSolo.split("-");
+            const diaNum= diaStr || "00";
+            const MESES= ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+            const nombreMes= MESES[parseInt(mesStr, 10)-1] || "MES";
 
-            // 1. DICCIONARIO DE SEDES (Según tu base de datos)
-            const nombresSedes = {
-              1: "Sede Norte",
-              2: "Sede Sur",
-              3: "Sede Centro",
-              4: "Sede Bello",
-              5: "Sede Itagüí"
-            };
-            
-            // 2. DICCIONARIO DE HORARIOS (Según los logs de tu consola)
-            const horasBloques = {
-              1: "8:00 - 10:00",
-              2: "10:00 - 12:00",
-              3: "12:00 - 14:00",
-              4: "14:00 - 16:00",
-              5: "16:00 - 18:00",
-              6: "18:00 - 20:00"
-            };
-            const nombreSedeReal = nombresSedes[cita.id_sede] || `Sede (ID: ${cita.id_sede})`;
-            const horaReal = horasBloques[cita.id_bloque] || "Horario por confirmar";
+            // Sedes y bloques desde la BD
+            const sedeCita= sedes.find(s=>s.id_sede==cita.id_sede);
+            const bloqueCita= bloques.find(b=>b.id_bloque==cita.id_bloque);
+            const nombreSedeReal= sedeCita?sedeCita.nombre:`Sede (ID: ${cita.id_sede})`;
+            const horaReal= bloqueCita
+              ? `${String(bloqueCita.hora_inicio).includes("T")?String(bloqueCita.hora_inicio).split("T")[1].substring(0,5):String(bloqueCita.hora_inicio).substring(0,5)} - ${String(bloqueCita.hora_fin).includes("T")?String(bloqueCita.hora_fin).split("T")[1].substring(0,5):String(bloqueCita.hora_fin).substring(0,5)}`
+              : "Horario por confirmar";
 
             return (
               <div key={cita.id_cita || cita.id} style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 0", borderBottom: "1px solid #eee" }}>

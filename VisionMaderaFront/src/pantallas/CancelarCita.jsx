@@ -26,7 +26,7 @@ export default function CancelarCita() {
     const cargarDatos= async()=>{
       try{
         const [resCitas, resSedes, resDisenadores, resBloques]= await Promise.all([
-          fetch(`${API_URL}/Cita`),
+          fetch(`${API_URL}/Cita`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}`}}),
           fetch(`${API_URL}/Sede`),
           fetch(`${API_URL}/Disenador`),
           fetch(`${API_URL}/BloqueHorario`),
@@ -54,7 +54,8 @@ export default function CancelarCita() {
   // Obtener la lista de citas 
   const obtenerCitas = async () => {
     try {
-      const response = await fetch(`${API_URL}/Cita`);
+      const token= localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/Cita`, { headers: { "Authorization": `Bearer ${token}`}});
       if (!response.ok) throw new Error(`Error en el servidor: ${response.status}`);
       const data= await response.json();
       setCitas(Array.isArray(data)?data:data.data||[]);
@@ -67,7 +68,13 @@ export default function CancelarCita() {
   const gestionarCancelarCita = async (idCita) => {
     if (!window.confirm("¿Estás seguro de que deseas cancelar esta cita?")) return;
     try {
-      const response = await fetch(`${API_URL}/Cita/${idCita}`, { method: "DELETE" });
+      const token= localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/Cita/${idCita}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": token ? `Bearer ${token}` : ""
+        }
+      });
       if (!response.ok) {
         const errorData= await response.json().catch(()=>({}));
         throw new Error(errorData.error || "No se pudo eliminar la cita en el servidor.");
